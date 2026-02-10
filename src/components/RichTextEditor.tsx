@@ -8,7 +8,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { Highlight } from '@tiptap/extension-highlight';
 import { FontFamily } from '@tiptap/extension-font-family';
 import { FontSize } from '../utils/fontSizeExtension';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Bold,
   Italic,
@@ -26,6 +26,7 @@ import {
   FileText,
   Volume2,
   Settings,
+  X,
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -54,6 +55,25 @@ export default function RichTextEditor({
   onSettingsClick,
 }: RichTextEditorProps) {
   const [showFormatting, setShowFormatting] = useState(false);
+  const [showHighlightMenu, setShowHighlightMenu] = useState(false);
+  const highlightMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (highlightMenuRef.current && !highlightMenuRef.current.contains(event.target as Node)) {
+        setShowHighlightMenu(false);
+      }
+    };
+
+    if (showHighlightMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showHighlightMenu]);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -264,17 +284,80 @@ export default function RichTextEditor({
 
             <div className="w-px h-8 bg-white/10 mx-1" />
 
-            <button
-              onClick={() => editor.chain().focus().toggleHighlight({ color: '#ffc078' }).run()}
-              className={`p-2 rounded-lg transition-all duration-200 ${
-                editor.isActive('highlight')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
-              }`}
-              title="Highlight"
-            >
-              <Highlighter className="w-4 h-4" />
-            </button>
+            <div className="relative" ref={highlightMenuRef}>
+              <button
+                onClick={() => setShowHighlightMenu(!showHighlightMenu)}
+                className={`p-2 rounded-lg transition-all duration-200 ${
+                  editor.isActive('highlight') || showHighlightMenu
+                    ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                }`}
+                title="Highlight"
+              >
+                <Highlighter className="w-4 h-4" />
+              </button>
+
+              {showHighlightMenu && (
+                <div className="absolute top-full left-0 mt-1 flex flex-col gap-2 p-3 bg-slate-800/95 rounded-lg border border-white/20 backdrop-blur-xl z-10 min-w-[180px]">
+                  <button
+                    onClick={() => {
+                      editor.chain().focus().toggleHighlight({ color: '#fef9c3' }).run();
+                      setShowHighlightMenu(false);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all text-left"
+                  >
+                    <div className="w-6 h-6 rounded border-2 border-white/20" style={{ backgroundColor: '#fef9c3' }} />
+                    <span className="text-sm text-white">Light Yellow</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      editor.chain().focus().toggleHighlight({ color: '#ffe4e6' }).run();
+                      setShowHighlightMenu(false);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all text-left"
+                  >
+                    <div className="w-6 h-6 rounded border-2 border-white/20" style={{ backgroundColor: '#ffe4e6' }} />
+                    <span className="text-sm text-white">Light Rose</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      editor.chain().focus().toggleHighlight({ color: '#d1fae5' }).run();
+                      setShowHighlightMenu(false);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all text-left"
+                  >
+                    <div className="w-6 h-6 rounded border-2 border-white/20" style={{ backgroundColor: '#d1fae5' }} />
+                    <span className="text-sm text-white">Light Green</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      editor.chain().focus().toggleHighlight({ color: '#dbeafe' }).run();
+                      setShowHighlightMenu(false);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all text-left"
+                  >
+                    <div className="w-6 h-6 rounded border-2 border-white/20" style={{ backgroundColor: '#dbeafe' }} />
+                    <span className="text-sm text-white">Light Blue</span>
+                  </button>
+
+                  <div className="w-full h-px bg-white/10 my-1" />
+
+                  <button
+                    onClick={() => {
+                      editor.chain().focus().unsetHighlight().run();
+                      setShowHighlightMenu(false);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all text-left text-red-300"
+                  >
+                    <X className="w-4 h-4" />
+                    <span className="text-sm">Remove Highlight</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             <div className="relative group">
               <button
