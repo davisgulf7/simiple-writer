@@ -64,7 +64,7 @@ function App() {
           <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/10">
             <MessageSquare className="w-6 h-6 text-blue-300" />
           </div>
-          <h1 className="text-3xl font-bold text-white">Response Screen</h1>
+          <h1 className="text-3xl font-bold text-white">Simple Writer</h1>
         </div>
 
         <div className="mb-8 relative">
