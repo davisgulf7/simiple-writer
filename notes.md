@@ -289,3 +289,17 @@ Read, Clear, and Settings buttons remain always visible on the right side
 The formatting toolbar now has a cleaner look with collapsible controls, and all action buttons are in one convenient location.
 
 
+The highlighter button should open up an attached modal that has four color options (light yellow, light rose, light green, light blue). There should also be an option to remove highlighting in this modal.
+
+
+0123456789
+ actions taken
+Done! The highlighter button now opens a menu with four highlight color options and a remove option:
+
+Light Yellow - soft yellow highlight
+Light Rose - soft pink highlight
+Light Green - soft green highlight
+Light Blue - soft blue highlight
+Remove Highlight - removes any highlighting
+Click the highlighter button to open the menu, select a color to apply it to your selected text, or choose "Remove Highlight" to clear any highlighting. The menu closes automatically after making a selection or clicking outside of it.
+
