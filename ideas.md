@@ -11,4 +11,8 @@ Formatting Persistence: Ensure that when saving, the format is preserved.
 User Experience: Add a toolbar for easy access to formatting options (e.g., Bold, Center, Font).
 Handling Plain Text: Allow users to paste text and optionally remove existing formatting to match the document style. 
 
+Done - 
+
+
+
 
