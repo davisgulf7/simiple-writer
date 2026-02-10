@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import Keyboard from './components/Keyboard';
 import RichTextEditor from './components/RichTextEditor';
-import { FileText, Volume2, Settings, X } from 'lucide-react';
+import { FileText, X } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
 
 interface SettingsState {
@@ -92,30 +92,6 @@ function App() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
             <div className="relative p-6">
-              <div className="flex items-center justify-end gap-2 mb-3">
-                <button
-                  onClick={handleRead}
-                  disabled={!response}
-                  className="px-4 py-1.5 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  <Volume2 className="w-4 h-4" />
-                  Read
-                </button>
-                <button
-                  onClick={handleClear}
-                  className="px-4 py-1.5 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200"
-                >
-                  Clear
-                </button>
-                <button
-                  onClick={() => setIsSettingsOpen(true)}
-                  className="p-1.5 text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200 flex items-center justify-center"
-                  aria-label="Settings"
-                >
-                  <Settings className="w-4 h-4" />
-                </button>
-              </div>
-
               <RichTextEditor
                 content={response}
                 onChange={setResponse}
@@ -124,6 +100,9 @@ function App() {
                 textAreaFontSize={settings.textAreaFontSize}
                 textAreaTextColor={settings.textAreaTextColor}
                 textAreaBgColor={settings.textAreaBgColor}
+                onRead={handleRead}
+                onClear={handleClear}
+                onSettingsClick={() => setIsSettingsOpen(true)}
               />
             </div>
           </div>
