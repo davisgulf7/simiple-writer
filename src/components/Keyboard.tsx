@@ -159,7 +159,7 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               relative w-16 h-16 rounded-xl font-semibold text-xs
               transition-all duration-200 ease-out
               ${selectedKey === 'CAPSLOCK' ? 'scale-95' : 'scale-100'}
-              ${isHighlighted('CAPSLOCK')
+              ${isShiftActive
                 ? 'bg-gradient-to-br from-blue-400/90 to-cyan-500/90 text-white shadow-[0_8px_32px_rgba(59,130,246,0.5)]'
                 : 'bg-gradient-to-br from-white/80 to-gray-100/60 text-gray-700 hover:from-white/90 hover:to-gray-50/70'
               }
