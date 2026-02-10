@@ -102,7 +102,7 @@ function App() {
               </div>
 
               <div
-                className="min-h-[120px] max-h-[200px] overflow-y-auto p-4 rounded-xl border border-white/10"
+                className="min-h-[210px] max-h-[350px] overflow-y-auto p-4 rounded-xl border border-white/10"
                 style={{
                   backgroundColor: settings.textAreaBgColor + '33',
                 }}
