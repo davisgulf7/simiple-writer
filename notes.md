@@ -259,3 +259,11 @@ Content is stored as HTML to preserve formatting
 The infrastructure is ready for you to add formatting buttons/controls whenever you want
 The application maintains its current appearance while now having full rich text capabilities ready to use. Check the documentation file for details on how to add formatting controls later.
 
+Change the icon for Simple Writer from a speech bubble to a document or writing icon.
+
+
+0123456789
+ actions taken
+Done! The icon has been changed from a speech bubble to a document icon, which better represents the writing functionality of Simple Writer.
+
+
