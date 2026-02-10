@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Keyboard from './components/Keyboard';
+import RichTextEditor from './components/RichTextEditor';
 import { MessageSquare, Volume2, Settings, X } from 'lucide-react';
+import type { Editor } from '@tiptap/react';
 
 interface SettingsState {
   keyFont: string;
@@ -14,6 +16,7 @@ interface SettingsState {
 function App() {
   const [response, setResponse] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const editorRef = useRef<Editor | null>(null);
   const [settings, setSettings] = useState<SettingsState>({
     keyFont: 'sans-serif',
     keyFontSize: 'text-2xl',
@@ -23,30 +26,47 @@ function App() {
     textAreaTextColor: '#ffffff',
   });
 
+  const handleEditorReady = (editor: Editor) => {
+    editorRef.current = editor;
+  };
+
   const handleKeyPress = (key: string) => {
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
     if (key === 'SPACE') {
-      setResponse(prev => prev + ' ');
+      editor.commands.insertContent(' ');
     } else {
-      setResponse(prev => prev + key);
+      editor.commands.insertContent(key);
     }
   };
 
   const handleDelete = () => {
-    setResponse(prev => prev.slice(0, -1));
+    if (!editorRef.current) return;
+    editorRef.current.commands.deleteRange({
+      from: editorRef.current.state.selection.from - 1,
+      to: editorRef.current.state.selection.from,
+    });
   };
 
   const handleReturn = () => {
-    setResponse(prev => prev + '\n');
+    if (!editorRef.current) return;
+    editorRef.current.commands.enter();
   };
 
   const handleClear = () => {
+    if (!editorRef.current) return;
+    editorRef.current.commands.clearContent();
     setResponse('');
   };
 
   const handleRead = () => {
-    if (!response) return;
+    if (!editorRef.current) return;
 
-    const utterance = new SpeechSynthesisUtterance(response);
+    const plainText = editorRef.current.getText();
+    if (!plainText) return;
+
+    const utterance = new SpeechSynthesisUtterance(plainText);
     utterance.rate = 1;
     utterance.pitch = 1;
     utterance.volume = 1;
@@ -101,26 +121,15 @@ function App() {
                 </div>
               </div>
 
-              <div
-                className="min-h-[210px] max-h-[350px] overflow-y-auto p-4 rounded-xl border border-white/10"
-                style={{
-                  backgroundColor: settings.textAreaBgColor + '33',
-                }}
-              >
-                <p
-                  className={`${settings.textAreaFontSize} font-medium tracking-wide leading-relaxed break-words whitespace-pre-wrap`}
-                  style={{
-                    color: settings.textAreaTextColor,
-                    fontFamily: settings.textAreaFont,
-                  }}
-                >
-                  {response || (
-                    <span className="text-gray-500 italic">
-                      Start typing using the keyboard below...
-                    </span>
-                  )}
-                </p>
-              </div>
+              <RichTextEditor
+                content={response}
+                onChange={setResponse}
+                onEditorReady={handleEditorReady}
+                textAreaFont={settings.textAreaFont}
+                textAreaFontSize={settings.textAreaFontSize}
+                textAreaTextColor={settings.textAreaTextColor}
+                textAreaBgColor={settings.textAreaBgColor}
+              />
             </div>
           </div>
         </div>
