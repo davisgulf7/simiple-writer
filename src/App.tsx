@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import Keyboard from './components/Keyboard';
 import RichTextEditor from './components/RichTextEditor';
-import { MessageSquare, Volume2, Settings, X } from 'lucide-react';
+import { FileText, Volume2, Settings, X } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
 
 interface SettingsState {
@@ -82,7 +82,7 @@ function App() {
       <div className="relative z-10 w-full max-w-5xl">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/10">
-            <MessageSquare className="w-6 h-6 text-blue-300" />
+            <FileText className="w-6 h-6 text-blue-300" />
           </div>
           <h1 className="text-3xl font-bold text-white">Simple Writer</h1>
         </div>
