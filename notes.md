@@ -266,4 +266,11 @@ Change the icon for Simple Writer from a speech bubble to a document or writing 
  actions taken
 Done! The icon has been changed from a speech bubble to a document icon, which better represents the writing functionality of Simple Writer.
 
+When the CAPS lock has been activated, and the shift key is highlighted blue, the caps lock key should also stay highlighted blue until it is pressed again to turn it off.
+
+
+0123456789
+ actions taken
+Done! The Caps Lock key will now stay highlighted blue when activated, matching the Shift key behavior. Both keys will remain blue until Caps Lock is pressed again to turn it off.
+
 
