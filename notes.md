@@ -273,4 +273,19 @@ When the CAPS lock has been activated, and the shift key is highlighted blue, th
  actions taken
 Done! The Caps Lock key will now stay highlighted blue when activated, matching the Shift key behavior. Both keys will remain blue until Caps Lock is pressed again to turn it off.
 
+Get rid of the strikethrough button. Put a button in front of the Bold button that has a document icon in it. The function of that button will be to toggle all of the rich text formatting buttons from hidden to visible, with the default being hidden. Place the Read, Clear, and Settings buttons on the same row as the rich text formatting controls. The Read, Clear, and Settings, will always stay visable.
+
+
+0123456789
+ actions taken
+Done! I've made the following changes:
+
+Removed the "Your Response" text
+Added a document icon button at the front of the toolbar that toggles the rich text formatting controls
+Formatting controls are now hidden by default - click the document icon to show/hide them
+Removed the strikethrough button
+Moved Read, Clear, and Settings buttons to the same row as the formatting controls
+Read, Clear, and Settings buttons remain always visible on the right side
+The formatting toolbar now has a cleaner look with collapsible controls, and all action buttons are in one convenient location.
+
 
