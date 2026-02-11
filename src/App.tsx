@@ -3,22 +3,17 @@ import Keyboard from './components/Keyboard';
 import RichTextEditor from './components/RichTextEditor';
 import { FileText, X, Image, Trash2 } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
+import {
+  type UserSettings,
+  DEFAULT_SETTINGS,
+  saveSettings,
+  loadSettings,
+  exportSettings,
+  importSettings,
+  resetToDefaults,
+} from './utils/settingsManager';
 
-interface SettingsState {
-  keyFont: string;
-  keyFontSize: string;
-  textAreaFont: string;
-  textAreaFontSize: string;
-  textAreaBgColor: string;
-  textAreaTextColor: string;
-  selectedVoice: string;
-  readingSpeed: number;
-  glassColor: string;
-  backgroundImage: string;
-  backgroundImageEnabled: boolean;
-}
-
-type SettingsTab = 'keys-text' | 'voice' | 'appearance';
+type SettingsTab = 'general' | 'keys-text' | 'voice' | 'appearance';
 
 const PRESET_BACKGROUNDS = [
   { name: 'Nature', url: 'https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1920' },
@@ -31,22 +26,10 @@ const PRESET_BACKGROUNDS = [
 function App() {
   const [response, setResponse] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<SettingsTab>('keys-text');
+  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const editorRef = useRef<Editor | null>(null);
-  const [settings, setSettings] = useState<SettingsState>({
-    keyFont: 'sans-serif',
-    keyFontSize: 'text-2xl',
-    textAreaFont: 'sans-serif',
-    textAreaFontSize: 'text-3xl',
-    textAreaBgColor: '#000000',
-    textAreaTextColor: '#ffffff',
-    selectedVoice: '',
-    readingSpeed: 1,
-    glassColor: '#3b82f6',
-    backgroundImage: '',
-    backgroundImageEnabled: false,
-  });
+  const [settings, setSettings] = useState<UserSettings>(loadSettings());
 
   useEffect(() => {
     const loadVoices = () => {
@@ -60,6 +43,10 @@ function App() {
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
+
+  useEffect(() => {
+    saveSettings(settings);
+  }, [settings]);
 
   const handleEditorReady = (editor: Editor) => {
     editorRef.current = editor;
@@ -115,6 +102,26 @@ function App() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const handleExportSettings = () => {
+    exportSettings(settings);
+  };
+
+  const handleImportSettings = async (file: File) => {
+    try {
+      const imported = await importSettings(file);
+      setSettings(imported);
+    } catch (error) {
+      alert('Failed to import settings. Please check the file format.');
+    }
+  };
+
+  const handleResetToDefaults = () => {
+    if (window.confirm('Reset all settings to default values? This cannot be undone.')) {
+      const defaults = resetToDefaults();
+      setSettings(defaults);
+    }
+  };
+
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -146,6 +153,66 @@ function App() {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'general':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-blue-300 mb-4">Settings Management</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={handleExportSettings}
+                  className="w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg transition-all border border-blue-400/30 text-left"
+                >
+                  <div className="font-medium">Export Settings</div>
+                  <div className="text-sm text-blue-300/70 mt-1">Save your current settings to a file</div>
+                </button>
+
+                <label className="block">
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleImportSettings(file);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="hidden"
+                    id="import-settings"
+                  />
+                  <div
+                    onClick={() => document.getElementById('import-settings')?.click()}
+                    className="w-full px-4 py-3 bg-green-500/20 hover:bg-green-500/30 text-green-200 rounded-lg transition-all border border-green-400/30 cursor-pointer"
+                  >
+                    <div className="font-medium">Import Settings</div>
+                    <div className="text-sm text-green-300/70 mt-1">Load settings from a file</div>
+                  </div>
+                </label>
+
+                <button
+                  onClick={handleResetToDefaults}
+                  className="w-full px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-200 rounded-lg transition-all border border-red-400/30 text-left"
+                >
+                  <div className="font-medium">Reset to System Defaults</div>
+                  <div className="text-sm text-red-300/70 mt-1">Restore all settings to their original values</div>
+                </button>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 pt-6">
+              <h3 className="text-lg font-semibold text-blue-300 mb-4">About</h3>
+              <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Simple Writer is a customizable text editor with an on-screen keyboard,
+                  rich text formatting, and text-to-speech capabilities. All your settings
+                  are automatically saved and can be exported to share across devices.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
       case 'keys-text':
         return (
           <div className="space-y-6">
@@ -494,6 +561,16 @@ function App() {
               </div>
 
               <div className="flex gap-1 border-b border-white/10">
+                <button
+                  onClick={() => setActiveTab('general')}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
+                    activeTab === 'general'
+                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  General
+                </button>
                 <button
                   onClick={() => setActiveTab('keys-text')}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
