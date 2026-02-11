@@ -13,7 +13,7 @@ import {
   resetToDefaults,
 } from './utils/settingsManager';
 
-type SettingsTab = 'general' | 'layout' | 'keys-text' | 'voice' | 'appearance';
+type SettingsTab = 'general' | 'layout' | 'keys-text' | 'voice' | 'theme';
 
 const PRESET_BACKGROUNDS = [
   { name: 'Nature', url: 'https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1920' },
@@ -379,7 +379,7 @@ function App() {
           </div>
         );
 
-      case 'appearance':
+      case 'theme':
         return (
           <div className="space-y-6">
             <div>
@@ -652,14 +652,14 @@ function App() {
                   Voice
                 </button>
                 <button
-                  onClick={() => setActiveTab('appearance')}
+                  onClick={() => setActiveTab('theme')}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'appearance'
+                    activeTab === 'theme'
                       ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  Appearance
+                  Theme
                 </button>
               </div>
             </div>
