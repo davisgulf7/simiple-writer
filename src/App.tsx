@@ -417,7 +417,7 @@ function App() {
         </div>
 
         <div className="mb-8 relative">
-          <div className="relative overflow-hidden rounded-2xl bg-black/50 backdrop-blur-2xl border border-white/20 shadow-2xl">
+          <div className="relative overflow-hidden rounded-2xl bg-black/60 backdrop-blur-2xl border border-white/20 shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
             <div className="relative p-6">

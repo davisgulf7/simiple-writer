@@ -127,7 +127,7 @@ export default function RichTextEditor({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/10">
+      <div className="flex flex-wrap items-center gap-2 p-3 bg-black/40 rounded-xl border border-white/10">
         <button
           onClick={() => setShowFormatting(!showFormatting)}
           className={`p-2 rounded-lg transition-all duration-200 ${
