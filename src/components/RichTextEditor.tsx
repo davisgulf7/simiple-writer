@@ -409,9 +409,9 @@ export default function RichTextEditor({
       </div>
 
       <div
-        className="min-h-[210px] max-h-[350px] overflow-y-auto p-4 rounded-xl border border-white/10"
+        className="min-h-[210px] max-h-[350px] overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm"
         style={{
-          backgroundColor: textAreaBgColor + '33',
+          backgroundColor: textAreaBgColor + '12',
         }}
       >
         <div
