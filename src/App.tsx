@@ -124,6 +124,24 @@ function App() {
     } : { r: 59, g: 130, b: 246 };
   };
 
+  const getHueFromRgb = (rgb: { r: number; g: number; b: number }) => {
+    const r = rgb.r / 255;
+    const g = rgb.g / 255;
+    const b = rgb.b / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h = 0;
+    if (max !== min) {
+      const d = max - min;
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+    return Math.round(h * 360);
+  };
+
   const glassRgb = hexToRgb(settings.glassColor);
 
   const renderTabContent = () => {
@@ -287,7 +305,7 @@ function App() {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Glass Effect Color
+                Background Color
               </label>
               <input
                 type="color"
@@ -296,7 +314,7 @@ function App() {
                 className="w-full h-10 px-2 bg-white/10 border border-white/20 rounded-lg cursor-pointer"
               />
               <p className="text-xs text-gray-400 mt-1">
-                This color influences the liquid glass effect on the page
+                Changes the page background color that shows through the glass effect
               </p>
             </div>
 
@@ -393,11 +411,19 @@ function App() {
         />
       ) : (
         <>
-          <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 -z-20" />
+          <div
+            className="fixed inset-0 -z-20"
+            style={{
+              background: `linear-gradient(to bottom right,
+                hsl(${getHueFromRgb(glassRgb)}, 30%, 8%),
+                hsl(${getHueFromRgb(glassRgb)}, 40%, 12%),
+                hsl(${getHueFromRgb(glassRgb)}, 30%, 8%))`
+            }}
+          />
           <div
             className="fixed inset-0 -z-10"
             style={{
-              background: `radial-gradient(circle at 30% 50%, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), transparent 50%), radial-gradient(circle at 70% 80%, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.08), transparent 50%)`
+              background: `radial-gradient(circle at 30% 50%, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.15), transparent 50%), radial-gradient(circle at 70% 80%, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.12), transparent 50%)`
             }}
           />
         </>
@@ -405,13 +431,8 @@ function App() {
 
       <div className="relative z-10 w-full max-w-5xl">
         <div className="flex items-center gap-3 mb-8">
-          <div
-            className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]"
-            style={{
-              background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.2), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1))`
-            }}
-          >
-            <FileText className="w-6 h-6 drop-shadow-lg" style={{ color: `rgb(${glassRgb.r},${glassRgb.g},${glassRgb.b})` }} />
+          <div className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)] bg-white/10">
+            <FileText className="w-6 h-6 drop-shadow-lg text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">Simple Writer</h1>
         </div>
