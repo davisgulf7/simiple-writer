@@ -528,3 +528,74 @@ Reset to Defaults shows a confirmation dialog before clearing everything
 All settings (fonts, colors, voices, backgrounds, etc.) are included in the system
 The app now maintains your personalized configuration across sessions and lets you easily backup, restore, or share your settings.
 
+Back to the appearance. I also want to add a way, on the background color picker, to check "Glass" or "Flat". If "Glass" is selected (the default, as it is now" then everything will work as is currently does. If "Flat" is selected, then the selected color becomes the background color, with no gradients and no glass effect, like a background image. The glass effect on the rest of the items (text area, keys, etc.) will remain, just as they do when using a background image. Don't code yet, just let me know if this makes sense.
+
+Yes, this makes perfect sense! Let me confirm my understanding:
+
+Current Behavior:
+
+Background color creates a gradient/glass effect with transparency and color mixing
+All UI elements (text area, keys, etc.) have their own glass effects
+Proposed Addition:
+
+Add a "Glass" / "Flat" toggle in the Appearance tab next to the background color picker
+Glass mode (default): Keeps the current gradient/glass background effect
+Flat mode: Background becomes a solid color (no gradient, no transparency) - similar to how it looks when a background image is used
+Important: Regardless of which mode is selected, all other UI elements (text area, keyboard keys, etc.) keep their glass effects
+This would essentially give users two background styles:
+
+Glass - the current animated gradient effect
+Flat - a solid color backdrop that still allows the UI elements to have their glass appearance on top
+Is that correct?
+
+Add 'Glass'/'Flat' background toggle
+
+Version 32
+
+
+Yes, do that.
+
+
+0123456789
+ actions taken
+Added the Glass/Flat background toggle to the Appearance tab. Now you can:
+
+Glass mode (default): Keeps the current animated gradient background effect with color mixing
+Flat mode: Creates a solid color background using your selected color, just like when using a background image
+The UI elements (text area, keyboard keys, etc.) will maintain their glass effects in both modes. You can find the toggle buttons right below the background color picker in the Appearance settings.
+
+Add Glass/Flat background toggle
+
+Version 33
+
+
+This is working beautifully. Make sure the settings export and import include all of these new settings. Also, I'm noticing that, when I pick a light background color (or the background image is light) the buttons, especially the rich text format controls, can be hard to read due to reduced contrast. I'm wondering if it would help to increase the background darkness (or reduce the transparency, whatever works best) on any button in that ribbon. How does this sound?
+
+
+0123456789
+ actions taken
+Perfect! I've made two key improvements:
+
+1. Settings Export/Import - Already working correctly. The export and import functions automatically include the new backgroundStyle setting since they serialize the entire settings object.
+
+2. Better Contrast for Formatting Controls - Significantly improved visibility on light backgrounds by:
+
+Darkening the toolbar background from 40% to 70% opacity
+Changing button backgrounds from white-based to black-based (40% opacity inactive, 60% on hover)
+Increasing text contrast from 70% to 80% opacity
+Strengthening borders for better definition
+Darkening dropdown menus and adding stronger shadows
+The buttons should now be much easier to see and use when you have a light background color or image selected.
+
+Update formatting control contrast
+
+Version 34
+
+
+The only thing I would change is moving the toolbar background back to 40%. That will make the buttons themselves pop a bit more. Keep all the other changes.
+
+
+0123456789
+ actions taken
+Done! The toolbar background is back to 40% opacity, which will make the darker buttons stand out more while keeping all the improved contrast on the buttons themselves.
+
