@@ -406,18 +406,18 @@ function App() {
       <div className="relative z-10 w-full max-w-5xl">
         <div className="flex items-center gap-3 mb-8">
           <div
-            className="p-3 rounded-xl backdrop-blur-xl border border-white/10"
+            className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]"
             style={{
               background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.2), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1))`
             }}
           >
-            <FileText className="w-6 h-6" style={{ color: `rgb(${glassRgb.r},${glassRgb.g},${glassRgb.b})` }} />
+            <FileText className="w-6 h-6 drop-shadow-lg" style={{ color: `rgb(${glassRgb.r},${glassRgb.g},${glassRgb.b})` }} />
           </div>
-          <h1 className="text-3xl font-bold text-white">Simple Writer</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Simple Writer</h1>
         </div>
 
         <div className="mb-8 relative">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl border border-white/20 shadow-2xl">
+          <div className="relative overflow-hidden rounded-2xl bg-black/50 backdrop-blur-2xl border border-white/20 shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
             <div className="relative p-6">
@@ -453,11 +453,6 @@ function App() {
           />
         </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">
-            Click Shift to toggle uppercase
-          </p>
-        </div>
       </div>
 
       {isSettingsOpen && (
