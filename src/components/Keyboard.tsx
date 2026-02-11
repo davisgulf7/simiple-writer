@@ -75,8 +75,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
           }
           backdrop-blur-xl
           border border-white/40
-          shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-          hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+          shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+          hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
           active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
           before:absolute before:inset-0 before:rounded-xl
           before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -109,8 +109,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -136,8 +136,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -165,8 +165,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -192,8 +192,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -221,8 +221,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent
@@ -253,8 +253,8 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
               }
               backdrop-blur-xl
               border border-white/40
-              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]
-              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_28px_rgba(0,0,0,0.55),0_12px_48px_rgba(0,0,0,0.45)]
+              shadow-[inset_0_2px_8px_rgba(255,255,255,0.6),inset_0_-2px_6px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]
+              hover:shadow-[inset_0_2px_8px_rgba(255,255,255,0.8),inset_0_-2px_6px_rgba(0,0,0,0.15),0_6px_12px_rgba(0,0,0,0.55),0_12px_20px_rgba(0,0,0,0.45)]
               active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,0,0,0.1)]
               before:absolute before:inset-0 before:rounded-xl
               before:bg-gradient-to-br before:from-white/30 before:to-transparent

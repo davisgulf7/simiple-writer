@@ -406,14 +406,14 @@ function App() {
       <div className="relative z-10 w-full max-w-5xl">
         <div className="flex items-center gap-3 mb-8">
           <div
-            className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5),0_8px_40px_rgba(0,0,0,0.4)]"
+            className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)]"
             style={{
               background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.2), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1))`
             }}
           >
             <FileText className="w-6 h-6 drop-shadow-lg" style={{ color: `rgb(${glassRgb.r},${glassRgb.g},${glassRgb.b})` }} />
           </div>
-          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Simple Writer</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">Simple Writer</h1>
         </div>
 
         <div className="mb-8 relative">
