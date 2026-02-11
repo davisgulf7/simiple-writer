@@ -127,13 +127,13 @@ export default function RichTextEditor({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 p-3 bg-black/40 rounded-xl border border-white/10">
+      <div className="flex flex-wrap items-center gap-2 p-3 bg-black/70 rounded-xl border border-white/10 backdrop-blur-sm">
         <button
           onClick={() => setShowFormatting(!showFormatting)}
           className={`p-2 rounded-lg transition-all duration-200 ${
             showFormatting
-              ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-              : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+              ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+              : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
           }`}
           title="Toggle Formatting"
         >
@@ -148,8 +148,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleBold().run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('bold')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Bold"
             >
@@ -160,8 +160,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleItalic().run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('italic')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Italic"
             >
@@ -172,8 +172,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleUnderline().run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('underline')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Underline"
             >
@@ -186,8 +186,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().setTextAlign('left').run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive({ textAlign: 'left' })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Align Left"
             >
@@ -198,8 +198,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().setTextAlign('center').run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive({ textAlign: 'center' })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Align Center"
             >
@@ -210,8 +210,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().setTextAlign('right').run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive({ textAlign: 'right' })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Align Right"
             >
@@ -224,8 +224,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('heading', { level: 1 })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Heading 1"
             >
@@ -236,8 +236,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('heading', { level: 2 })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Heading 2"
             >
@@ -248,8 +248,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('heading', { level: 3 })
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Heading 3"
             >
@@ -262,8 +262,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('bulletList')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Bullet List"
             >
@@ -274,8 +274,8 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 editor.isActive('orderedList')
-                  ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                  ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                  : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
               }`}
               title="Numbered List"
             >
@@ -289,8 +289,8 @@ export default function RichTextEditor({
                 onClick={() => setShowHighlightMenu(!showHighlightMenu)}
                 className={`p-2 rounded-lg transition-all duration-200 ${
                   editor.isActive('highlight') || showHighlightMenu
-                    ? 'bg-blue-500/30 text-blue-300 border border-blue-400/50'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                    ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60'
+                    : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20'
                 }`}
                 title="Highlight"
               >
@@ -298,7 +298,7 @@ export default function RichTextEditor({
               </button>
 
               {showHighlightMenu && (
-                <div className="absolute top-full left-0 mt-1 flex flex-col gap-2 p-3 bg-slate-800/95 rounded-lg border border-white/20 backdrop-blur-xl z-10 min-w-[180px]">
+                <div className="absolute top-full left-0 mt-1 flex flex-col gap-2 p-3 bg-slate-900/95 rounded-lg border border-white/20 backdrop-blur-xl z-10 min-w-[180px] shadow-2xl">
                   <button
                     onClick={() => {
                       editor.chain().focus().toggleHighlight({ color: '#fef9c3' }).run();
@@ -361,12 +361,12 @@ export default function RichTextEditor({
 
             <div className="relative group">
               <button
-                className="p-2 rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10 transition-all duration-200"
+                className="p-2 rounded-lg bg-black/40 text-white/80 hover:bg-black/60 hover:text-white border border-white/20 transition-all duration-200"
                 title="Text Color"
               >
                 <Type className="w-4 h-4" />
               </button>
-              <div className="absolute top-full left-0 mt-1 hidden group-hover:flex gap-1 p-2 bg-slate-800/95 rounded-lg border border-white/20 backdrop-blur-xl z-10">
+              <div className="absolute top-full left-0 mt-1 hidden group-hover:flex gap-1 p-2 bg-slate-900/95 rounded-lg border border-white/20 backdrop-blur-xl z-10 shadow-2xl">
                 {['#000000', '#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'].map((color) => (
                   <button
                     key={color}
@@ -386,7 +386,7 @@ export default function RichTextEditor({
         <button
           onClick={onRead}
           disabled={!content}
-          className="px-4 py-1.5 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-1.5 text-sm font-medium text-white bg-black/40 hover:bg-black/60 rounded-lg border border-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <Volume2 className="w-4 h-4" />
           Read
@@ -394,14 +394,14 @@ export default function RichTextEditor({
 
         <button
           onClick={onClear}
-          className="px-4 py-1.5 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200"
+          className="px-4 py-1.5 text-sm font-medium text-white bg-black/40 hover:bg-black/60 rounded-lg border border-white/30 transition-all duration-200"
         >
           Clear
         </button>
 
         <button
           onClick={onSettingsClick}
-          className="p-1.5 text-white bg-white/10 hover:bg-white/20 rounded-lg border border-white/20 transition-all duration-200 flex items-center justify-center"
+          className="p-1.5 text-white bg-black/40 hover:bg-black/60 rounded-lg border border-white/30 transition-all duration-200 flex items-center justify-center"
           aria-label="Settings"
         >
           <Settings className="w-4 h-4" />
