@@ -13,7 +13,7 @@ import {
   resetToDefaults,
 } from './utils/settingsManager';
 
-type SettingsTab = 'general' | 'keys-text' | 'voice' | 'appearance';
+type SettingsTab = 'general' | 'layout' | 'keys-text' | 'voice' | 'appearance';
 
 const PRESET_BACKGROUNDS = [
   { name: 'Nature', url: 'https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1920' },
@@ -209,6 +209,18 @@ function App() {
                   are automatically saved and can be exported to share across devices.
                 </p>
               </div>
+            </div>
+          </div>
+        );
+
+      case 'layout':
+        return (
+          <div className="space-y-6">
+            <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Layout settings will be available here soon. This section will allow you to
+                customize the arrangement and sizing of different elements in the application.
+              </p>
             </div>
           </div>
         );
@@ -608,6 +620,16 @@ function App() {
                   }`}
                 >
                   General
+                </button>
+                <button
+                  onClick={() => setActiveTab('layout')}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
+                    activeTab === 'layout'
+                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Layout
                 </button>
                 <button
                   onClick={() => setActiveTab('keys-text')}
