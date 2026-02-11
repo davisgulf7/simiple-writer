@@ -10,6 +10,7 @@ export interface UserSettings {
   glassColor: string;
   backgroundImage: string;
   backgroundImageEnabled: boolean;
+  backgroundStyle: 'glass' | 'flat';
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -24,6 +25,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   glassColor: '#3b82f6',
   backgroundImage: '',
   backgroundImageEnabled: false,
+  backgroundStyle: 'glass',
 };
 
 const STORAGE_KEY = 'simple-writer-settings';

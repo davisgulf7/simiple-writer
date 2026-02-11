@@ -383,6 +383,39 @@ function App() {
               <p className="text-xs text-gray-400 mt-1">
                 Changes the page background color that shows through the glass effect
               </p>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Background Style
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSettings({ ...settings, backgroundStyle: 'glass' })}
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                      settings.backgroundStyle === 'glass'
+                        ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
+                        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    Glass
+                  </button>
+                  <button
+                    onClick={() => setSettings({ ...settings, backgroundStyle: 'flat' })}
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                      settings.backgroundStyle === 'flat'
+                        ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
+                        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    Flat
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  {settings.backgroundStyle === 'glass'
+                    ? 'Gradient effect with color mixing'
+                    : 'Solid color background'}
+                </p>
+              </div>
             </div>
 
             <div className="border-t border-white/10 pt-6">
@@ -475,6 +508,11 @@ function App() {
         <div
           className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-20"
           style={{ backgroundImage: `url(${settings.backgroundImage})` }}
+        />
+      ) : settings.backgroundStyle === 'flat' ? (
+        <div
+          className="fixed inset-0 -z-20"
+          style={{ backgroundColor: settings.glassColor }}
         />
       ) : (
         <>
