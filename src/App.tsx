@@ -619,7 +619,7 @@ function App() {
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  General
+                  Settings
                 </button>
                 <button
                   onClick={() => setActiveTab('layout')}
@@ -639,7 +639,7 @@ function App() {
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  Keys & Text
+                  Text
                 </button>
                 <button
                   onClick={() => setActiveTab('voice')}
