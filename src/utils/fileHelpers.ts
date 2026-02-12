@@ -27,28 +27,28 @@ export const saveAsTXT = (content: string, filename: string) => {
 /**
  * Exports content as a Microsoft Word document (.docx)
  */
-// export const exportAsDOCX = async (htmlContent: string, filename: string) => {
-//     // Dynamic import to avoid build issues with CommonJS module in CI
-//     // @ts-ignore
-//     const htmlDocx = (await import('html-docx-js-typescript')).default;
-//
-//     // Wrap content in a basic HTML structure for better Word compatibility
-//     const fullHtml = `
-//     <!DOCTYPE html>
-//     <html>
-//       <head>
-//         <meta charset="UTF-8">
-//         <title>${filename}</title>
-//       </head>
-//       <body>
-//         ${htmlContent}
-//       </body>
-//     </html>
-//   `;
-//
-//     const converted = await htmlDocx.asBlob(fullHtml);
-//     saveAs(converted as Blob, `${filename}.docx`);
-// };
+export const exportAsDOCX = async (htmlContent: string, filename: string) => {
+    // Dynamic import to avoid build issues with CommonJS module in CI
+    // @ts-ignore
+    const htmlDocx = (await import('html-docx-js-typescript')).default;
+
+    // Wrap content in a basic HTML structure for better Word compatibility
+    const fullHtml = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${filename}</title>
+      </head>
+      <body>
+        ${htmlContent}
+      </body>
+    </html>
+  `;
+
+    const converted = await htmlDocx.asBlob(fullHtml);
+    saveAs(converted as Blob, `${filename}.docx`);
+};
 
 /**
  * Imports content from a file (HTML, TXT, DOCX)

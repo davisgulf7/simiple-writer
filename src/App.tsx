@@ -14,6 +14,7 @@ import {
 import {
   saveAsHTML,
   saveAsTXT,
+  exportAsDOCX,
   importFile
 } from './utils/fileHelpers';
 
@@ -175,8 +176,7 @@ function App() {
   const handleExportDOCX = async () => {
     if (!editorRef.current) return;
     const html = editorRef.current.getHTML();
-    alert("DOCX export temporarily disabled for debugging.");
-    // await exportAsDOCX(html, 'my-clickit-document');
+    await exportAsDOCX(html, 'my-clickit-document');
   };
 
   const handleExportTXT = () => {
