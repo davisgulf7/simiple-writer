@@ -5,13 +5,18 @@ import { FileText, X, Image, Trash2 } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
 import {
   type UserSettings,
-  DEFAULT_SETTINGS,
   saveSettings,
   loadSettings,
   exportSettings,
   importSettings,
   resetToDefaults,
 } from './utils/settingsManager';
+import {
+  saveAsHTML,
+  saveAsTXT,
+  exportAsDOCX,
+  importFile
+} from './utils/fileHelpers';
 
 type SettingsTab = 'general' | 'layout' | 'keys-text' | 'voice' | 'theme';
 
@@ -149,6 +154,53 @@ function App() {
     return Math.round(h * 360);
   };
 
+  const handleSaveProject = () => {
+    if (!editorRef.current) return;
+    const html = editorRef.current.getHTML();
+    saveAsHTML(html, 'my-clickit-project');
+  };
+
+  const handleOpenProject = async (file: File) => {
+    if (!editorRef.current) return;
+    try {
+      const content = await importFile(file);
+      if (content) {
+        editorRef.current.commands.setContent(content);
+        setResponse(content);
+      }
+    } catch (error) {
+      alert('Failed to open project file.');
+    }
+  };
+
+  const handleExportDOCX = async () => {
+    if (!editorRef.current) return;
+    const html = editorRef.current.getHTML();
+    await exportAsDOCX(html, 'my-clickit-document');
+  };
+
+  const handleExportTXT = () => {
+    if (!editorRef.current) return;
+    const html = editorRef.current.getHTML();
+    saveAsTXT(html, 'my-clickit-document');
+  };
+
+  const handleImportDocument = async (file: File) => {
+    if (!editorRef.current) return;
+    try {
+      const content = await importFile(file);
+      if (content) {
+        // When importing a document (not a project), we might want to append or replace.
+        // For now, let's replace to keep it simple, or we could insert at cursor.
+        // Let's replace for consistency with "Open".
+        editorRef.current.commands.setContent(content);
+        setResponse(content);
+      }
+    } catch (error) {
+      alert('Failed to import document.');
+    }
+  };
+
   const glassRgb = hexToRgb(settings.glassColor);
 
   const renderTabContent = () => {
@@ -157,6 +209,75 @@ function App() {
         return (
           <div className="space-y-6">
             <div>
+              <h3 className="text-lg font-semibold text-blue-300 mb-4">File Management</h3>
+
+              <div className="space-y-6">
+                {/* Export Section */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Export Document</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={handleExportDOCX}
+                      className="px-4 py-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 rounded-lg transition-all border border-indigo-400/30 flex flex-col items-center justify-center gap-1"
+                    >
+                      <span className="font-bold text-lg">.DOCX</span>
+                      <span className="text-xs opacity-70">Word Doc</span>
+                    </button>
+                    <button
+                      onClick={handleExportTXT}
+                      className="px-4 py-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 rounded-lg transition-all border border-indigo-400/30 flex flex-col items-center justify-center gap-1"
+                    >
+                      <span className="font-bold text-lg">.TXT</span>
+                      <span className="text-xs opacity-70">Plain Text</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Import Section */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Import Document</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="cursor-pointer px-4 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg transition-all border border-emerald-400/30 flex flex-col items-center justify-center gap-1">
+                      <input
+                        type="file"
+                        accept=".docx"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImportDocument(file);
+                            e.target.value = '';
+                            setIsSettingsOpen(false);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <span className="font-bold text-lg">.DOCX</span>
+                      <span className="text-xs opacity-70">Word Doc</span>
+                    </label>
+
+                    <label className="cursor-pointer px-4 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg transition-all border border-emerald-400/30 flex flex-col items-center justify-center gap-1">
+                      <input
+                        type="file"
+                        accept=".txt"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImportDocument(file);
+                            e.target.value = '';
+                            setIsSettingsOpen(false);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <span className="font-bold text-lg">.TXT</span>
+                      <span className="text-xs opacity-70">Plain Text</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 pt-6">
               <h3 className="text-lg font-semibold text-blue-300 mb-4">Settings Management</h3>
               <div className="space-y-3">
                 <button
@@ -451,21 +572,19 @@ function App() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSettings({ ...settings, backgroundStyle: 'glass' })}
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                      settings.backgroundStyle === 'glass'
-                        ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
-                        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
-                    }`}
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${settings.backgroundStyle === 'glass'
+                      ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
+                      : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                      }`}
                   >
                     Glass
                   </button>
                   <button
                     onClick={() => setSettings({ ...settings, backgroundStyle: 'flat' })}
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                      settings.backgroundStyle === 'flat'
-                        ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
-                        : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
-                    }`}
+                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${settings.backgroundStyle === 'flat'
+                      ? 'bg-blue-500/30 text-blue-200 border-2 border-blue-400'
+                      : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                      }`}
                   >
                     Flat
                   </button>
@@ -527,11 +646,10 @@ function App() {
                       <button
                         key={bg.name}
                         onClick={() => setSettings({ ...settings, backgroundImage: bg.url })}
-                        className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
-                          settings.backgroundImage === bg.url
-                            ? 'border-blue-500'
-                            : 'border-white/10 hover:border-white/30'
-                        }`}
+                        className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${settings.backgroundImage === bg.url
+                          ? 'border-blue-500'
+                          : 'border-white/10 hover:border-white/30'
+                          }`}
                       >
                         <img
                           src={bg.url}
@@ -599,7 +717,33 @@ function App() {
           <div className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)] bg-white/10">
             <FileText className="w-6 h-6 drop-shadow-lg text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">CLICK-IT Writer</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mr-auto">CLICK-IT Writer</h1>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveProject}
+              className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg backdrop-blur-md border border-blue-400/30 font-medium transition-all text-sm flex items-center gap-2"
+              title="Save project as HTML"
+            >
+              <span>Save</span>
+            </button>
+
+            <label className="cursor-pointer px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg backdrop-blur-md border border-emerald-400/30 font-medium transition-all text-sm flex items-center gap-2" title="Open HTML project file">
+              <input
+                type="file"
+                accept=".html,.htm"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleOpenProject(file);
+                    e.target.value = '';
+                  }
+                }}
+                className="hidden"
+              />
+              <span>Open</span>
+            </label>
+          </div>
         </div>
 
         <div className="mb-8 relative">
@@ -667,51 +811,46 @@ function App() {
               <div className="flex gap-1 border-b border-white/10">
                 <button
                   onClick={() => setActiveTab('general')}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'general'
-                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === 'general'
+                    ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   Settings
                 </button>
                 <button
                   onClick={() => setActiveTab('layout')}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'layout'
-                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === 'layout'
+                    ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   Layout
                 </button>
                 <button
                   onClick={() => setActiveTab('keys-text')}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'keys-text'
-                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === 'keys-text'
+                    ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   Text
                 </button>
                 <button
                   onClick={() => setActiveTab('voice')}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'voice'
-                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === 'voice'
+                    ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   Voice
                 </button>
                 <button
                   onClick={() => setActiveTab('theme')}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
-                    activeTab === 'theme'
-                      ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === 'theme'
+                    ? 'text-blue-300 bg-white/10 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   Theme
                 </button>
