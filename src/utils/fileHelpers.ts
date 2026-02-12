@@ -11,33 +11,44 @@ export const saveAsHTML = (content: string, filename: string) => {
     saveAs(blob, `${filename}.html`);
 };
 
-// ... (skipping saveAsTXT)
+/**
+ * Saves content as a plain text file
+ */
+export const saveAsTXT = (content: string, filename: string) => {
+    // Create a temporary element to strip HTML tags
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const text = tempDiv.textContent || tempDiv.innerText || '';
+
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, `${filename}.txt`);
+};
 
 /**
  * Exports content as a Microsoft Word document (.docx)
  */
-export const exportAsDOCX = async (htmlContent: string, filename: string) => {
-    // Dynamic import to avoid build issues with CommonJS module in CI
-    // @ts-ignore
-    const htmlDocx = (await import('html-docx-js-typescript')).default;
-
-    // Wrap content in a basic HTML structure for better Word compatibility
-    const fullHtml = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>${filename}</title>
-      </head>
-      <body>
-        ${htmlContent}
-      </body>
-    </html>
-  `;
-
-    const converted = await htmlDocx.asBlob(fullHtml);
-    saveAs(converted as Blob, `${filename}.docx`);
-};
+// export const exportAsDOCX = async (htmlContent: string, filename: string) => {
+//     // Dynamic import to avoid build issues with CommonJS module in CI
+//     // @ts-ignore
+//     const htmlDocx = (await import('html-docx-js-typescript')).default;
+//
+//     // Wrap content in a basic HTML structure for better Word compatibility
+//     const fullHtml = `
+//     <!DOCTYPE html>
+//     <html>
+//       <head>
+//         <meta charset="UTF-8">
+//         <title>${filename}</title>
+//       </head>
+//       <body>
+//         ${htmlContent}
+//       </body>
+//     </html>
+//   `;
+//
+//     const converted = await htmlDocx.asBlob(fullHtml);
+//     saveAs(converted as Blob, `${filename}.docx`);
+// };
 
 /**
  * Imports content from a file (HTML, TXT, DOCX)
