@@ -216,11 +216,59 @@ function App() {
       case 'layout':
         return (
           <div className="space-y-6">
-            <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-              <p className="text-sm text-gray-300 leading-relaxed">
-                Layout settings will be available here soon. This section will allow you to
-                customize the arrangement and sizing of different elements in the application.
-              </p>
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4">Keyboard</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-300 mb-3 block">Keyboard Type</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                      <input
+                        type="radio"
+                        name="keyboardType"
+                        value="basic"
+                        checked={settings.keyboardType === 'basic'}
+                        onChange={(e) => setSettings({ ...settings, keyboardType: e.target.value as 'basic' | 'with-numbers' | 'none' })}
+                        className="mr-3"
+                      />
+                      <span className="text-white">Basic Keyboard</span>
+                    </label>
+                    <label className="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                      <input
+                        type="radio"
+                        name="keyboardType"
+                        value="with-numbers"
+                        checked={settings.keyboardType === 'with-numbers'}
+                        onChange={(e) => setSettings({ ...settings, keyboardType: e.target.value as 'basic' | 'with-numbers' | 'none' })}
+                        className="mr-3"
+                      />
+                      <span className="text-white">Keyboard w/ Numbers</span>
+                    </label>
+                    <label className="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                      <input
+                        type="radio"
+                        name="keyboardType"
+                        value="none"
+                        checked={settings.keyboardType === 'none'}
+                        onChange={(e) => setSettings({ ...settings, keyboardType: e.target.value as 'basic' | 'with-numbers' | 'none' })}
+                        className="mr-3"
+                      />
+                      <span className="text-white">No Keyboard</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                    <input
+                      type="checkbox"
+                      checked={settings.colorCodingEnabled}
+                      onChange={(e) => setSettings({ ...settings, colorCodingEnabled: e.target.checked })}
+                      className="mr-3"
+                    />
+                    <span className="text-white">Color Coding</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -570,26 +618,32 @@ function App() {
                 onRead={handleRead}
                 onClear={handleClear}
                 onSettingsClick={() => setIsSettingsOpen(true)}
+                minHeight={settings.keyboardType === 'none' ? '525px' : '210px'}
+                maxHeight={settings.keyboardType === 'none' ? '875px' : '350px'}
               />
             </div>
           </div>
         </div>
 
-        <div className="relative">
-          <div
-            className="absolute inset-0 rounded-3xl blur-3xl -z-10"
-            style={{
-              background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.05))`
-            }}
-          />
-          <Keyboard
-            onKeyPress={handleKeyPress}
-            onDelete={handleDelete}
-            onReturn={handleReturn}
-            keyFont={settings.keyFont}
-            keyFontSize={settings.keyFontSize}
-          />
-        </div>
+        {settings.keyboardType !== 'none' && (
+          <div className="relative">
+            <div
+              className="absolute inset-0 rounded-3xl blur-3xl -z-10"
+              style={{
+                background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.05))`
+              }}
+            />
+            <Keyboard
+              onKeyPress={handleKeyPress}
+              onDelete={handleDelete}
+              onReturn={handleReturn}
+              keyFont={settings.keyFont}
+              keyFontSize={settings.keyFontSize}
+              keyboardType={settings.keyboardType}
+              colorCodingEnabled={settings.colorCodingEnabled}
+            />
+          </div>
+        )}
 
       </div>
 

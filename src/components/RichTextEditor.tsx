@@ -40,6 +40,8 @@ interface RichTextEditorProps {
   onRead: () => void;
   onClear: () => void;
   onSettingsClick: () => void;
+  minHeight?: string;
+  maxHeight?: string;
 }
 
 export default function RichTextEditor({
@@ -53,6 +55,8 @@ export default function RichTextEditor({
   onRead,
   onClear,
   onSettingsClick,
+  minHeight = '210px',
+  maxHeight = '350px',
 }: RichTextEditorProps) {
   const [showFormatting, setShowFormatting] = useState(false);
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
@@ -104,7 +108,8 @@ export default function RichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: 'outline-none focus:outline-none min-h-[210px]',
+        class: 'outline-none focus:outline-none',
+        style: `min-height: ${minHeight}`,
       },
     },
   });
@@ -409,9 +414,11 @@ export default function RichTextEditor({
       </div>
 
       <div
-        className="min-h-[210px] max-h-[350px] overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+        className="overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm"
         style={{
           backgroundColor: textAreaBgColor + 'E8',
+          minHeight: minHeight,
+          maxHeight: maxHeight,
         }}
       >
         <div

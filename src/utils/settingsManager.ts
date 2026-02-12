@@ -11,6 +11,8 @@ export interface UserSettings {
   backgroundImage: string;
   backgroundImageEnabled: boolean;
   backgroundStyle: 'glass' | 'flat';
+  keyboardType: 'basic' | 'with-numbers' | 'none';
+  colorCodingEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -26,6 +28,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   backgroundImage: '',
   backgroundImageEnabled: false,
   backgroundStyle: 'glass',
+  keyboardType: 'basic',
+  colorCodingEnabled: false,
 };
 
 const STORAGE_KEY = 'simple-writer-settings';
