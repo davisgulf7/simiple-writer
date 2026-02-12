@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 import mammoth from 'mammoth';
 // @ts-ignore
-import htmlDocx from 'html-docx-js-typescript';
+// import htmlDocx from 'html-docx-js-typescript'; // Refactored to dynamic import
 
 /**
  * Saves content as an HTML file (Native Project Format)
@@ -11,23 +11,16 @@ export const saveAsHTML = (content: string, filename: string) => {
     saveAs(blob, `${filename}.html`);
 };
 
-/**
- * Saves content as a plain text file
- */
-export const saveAsTXT = (content: string, filename: string) => {
-    // Create a temporary element to strip HTML tags
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = content;
-    const text = tempDiv.textContent || tempDiv.innerText || '';
-
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    saveAs(blob, `${filename}.txt`);
-};
+// ... (skipping saveAsTXT)
 
 /**
  * Exports content as a Microsoft Word document (.docx)
  */
 export const exportAsDOCX = async (htmlContent: string, filename: string) => {
+    // Dynamic import to avoid build issues with CommonJS module in CI
+    // @ts-ignore
+    const htmlDocx = (await import('html-docx-js-typescript')).default;
+
     // Wrap content in a basic HTML structure for better Word compatibility
     const fullHtml = `
     <!DOCTYPE html>
