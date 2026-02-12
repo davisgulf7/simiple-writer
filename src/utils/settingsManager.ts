@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   colorCodingEnabled: false,
 };
 
-const STORAGE_KEY = 'simple-writer-settings';
+const STORAGE_KEY = 'click-it-writer-settings';
 
 export const saveSettings = (settings: UserSettings): void => {
   try {
@@ -61,7 +61,7 @@ export const exportSettings = (settings: UserSettings): void => {
   const url = URL.createObjectURL(dataBlob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `simple-writer-settings-${Date.now()}.json`;
+  link.download = `click-it-writer-settings-${Date.now()}.json`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

@@ -204,7 +204,7 @@ function App() {
               <h3 className="text-lg font-semibold text-blue-300 mb-4">About</h3>
               <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  Simple Writer is a customizable text editor with an on-screen keyboard,
+                  CLICK-IT Writer is a customizable text editor with an on-screen keyboard,
                   rich text formatting, and text-to-speech capabilities. All your settings
                   are automatically saved and can be exported to share across devices.
                 </p>
@@ -599,7 +599,7 @@ function App() {
           <div className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)] bg-white/10">
             <FileText className="w-6 h-6 drop-shadow-lg text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">Simple Writer</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">CLICK-IT Writer</h1>
         </div>
 
         <div className="mb-8 relative">
