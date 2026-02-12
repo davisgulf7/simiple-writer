@@ -667,3 +667,17 @@ Light orange: consonants
 Light red: delete, caps lock, backspace
 All settings are automatically saved to localStorage and persist across sessions. The text area dynamically adjusts its height when the keyboard is hidden to provide more writing space.
 
+Change the app name from "Simple Writer" to "CLICK-IT Writer"
+
+
+0123456789
+0123456789
+ actions taken
+Done! I've updated the app name from "Simple Writer" to "CLICK-IT Writer" in all relevant locations:
+
+Main header title
+About section description
+Browser page title
+Settings storage key
+Exported settings filename
+
