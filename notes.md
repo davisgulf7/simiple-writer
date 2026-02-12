@@ -599,3 +599,71 @@ The only thing I would change is moving the toolbar background back to 40%. That
  actions taken
 Done! The toolbar background is back to 40% opacity, which will make the darker buttons stand out more while keeping all the improved contrast on the buttons themselves.
 
+In the General tab, in Settings, add a "Layout" tab after "General" and before "Keys & Text".
+
+
+0123456789
+ actions taken
+Done! Added a new "Layout" tab in Settings between General and Keys & Text. The tab is currently a placeholder that can be populated with layout customization options in the future.
+
+Add Layout tab to Settings
+
+Version 36
+
+
+In the Settings tabs, change "Appearance" to "Theme"
+
+
+0123456789
+ actions taken
+Done! Changed the "Appearance" tab to "Theme" in Settings.
+
+Rename Appearance tab to Theme
+
+Version 37
+
+
+In the Settings modal, in the tab labels, change "General" to "Settings" and change "Keys & Text" to "Text"
+
+
+0123456789
+ actions taken
+Done! Updated the Settings modal tab labels:
+
+"General" is now "Settings"
+"Keys & Text" is now "Text"
+Update Settings modal tab labels
+
+Version 38
+
+
+Perfect. Under the Layout tab in Settings, it should start with a keyboard section. The choices should be:
+
+"Basic Keyboard" (this is what we have now and should be the default)
+
+"Keyboard w/ Numbers" (this will be the current keyboard with the number row added at the top)
+
+"Color Coding" (this will toggle color coding on and off for whichever keyboard is currently in use. The color code can be found in the key_colorcoding.md file)
+
+"No Keyboard" (this will hide the entire keyboard and will increase the height of the writing text area by 250%)
+
+
+0123456789
+0123456789
+ actions taken
+Perfect! I've successfully implemented the keyboard settings in the Layout tab. Here's what was added:
+
+Keyboard Settings in Layout Tab:
+
+Basic Keyboard - The default keyboard layout (current implementation)
+Keyboard w/ Numbers - Adds a number row (1-9, 0) at the top of the keyboard
+No Keyboard - Hides the keyboard completely and increases text area height by 250% (from 210px to 525px)
+Color Coding - Toggle that applies color coding to keys based on the scheme from key_colorcoding.md:
+Light yellow: space, shift, enter, tab, caps
+Light blue: number keys
+Light green: punctuation
+Light purple: vowels (a, e, i, o, u)
+Light orange: consonants
+Light red: delete, caps lock, backspace
+All settings are automatically saved to localStorage and persist across sessions. The text area dynamically adjusts its height when the keyboard is hidden to provide more writing space.
+
