@@ -131,19 +131,18 @@ function App() {
         lastWord = wordMatch ? wordMatch[0] : '';
       } else {
         // RETURN
+        // 1. If the line ends with punctuation, it was likely already read by the punctuation trigger.
+        if (/[.!?]$/.test(trimmed)) {
+          return;
+        }
+
         // Just find the last word
         const cleanTextForMatch = cleanForSpeech(trimmed);
         const wordMatch = cleanTextForMatch.match(/(\S+)$/);
         lastWord = wordMatch ? wordMatch[0] : '';
       }
 
-      // 1. Speak the last word (if it exists)
-      // interrupt: true because we want to say this word immediately
-      if (lastWord) {
-        speakText(lastWord, true);
-      }
-
-      // 2. Speak the sentence/line (queueing after the word)
+      // Calculate lastSentence first to check for redundancy
       // Find the start of the current sentence by looking backwards for . ! ? OR \n
       let sentenceStart = 0;
       const searchLimit = Math.max(0, textBefore.length - 1000);
@@ -165,6 +164,21 @@ function App() {
 
       const lastSentence = textBefore.slice(sentenceStart).trim();
 
+      // 1. Speak the last word (if it exists)
+      // interrupt: true because we want to say this word immediately
+      // Optimization: If lastWord is basically the same as lastSentence (e.g. one word list item),
+      // effectively skip it so we don't say "Cat... Cat".
+      if (lastWord) {
+        const normalizedWord = lastWord.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const normalizedSentence = lastSentence.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        // Only speak the word if it's NOT the entire sentence
+        if (normalizedWord !== normalizedSentence) {
+          speakText(lastWord, true);
+        }
+      }
+
+      // 2. Speak the sentence/line (queueing after the word)
       if (lastSentence) {
         // Condition: if it ends with the punctuation we triggered with, don't double it.
         // For RETURN, we don't usually add punctuation unless we want to pause... 
