@@ -134,9 +134,9 @@ export default function RichTextEditor({
         if (textBefore === ' ') {
           return; // Don't trigger if already a space (prevent double-read on 2nd space)
         }
-        onAutoReadTrigger('SPACE');
+        setTimeout(() => onAutoReadTrigger('SPACE'), 0);
       } else if (e.key === '.' || e.key === '!' || e.key === '?') {
-        onAutoReadTrigger('PERIOD');
+        setTimeout(() => onAutoReadTrigger('PERIOD'), 0);
       }
     };
 
