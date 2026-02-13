@@ -176,9 +176,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     } else {
       // 2. Check context
       // Look back 5 chars for sentence terminators
+      // Use \n as block separator, but we really care about text content.
       const lookback = doc.textBetween(Math.max(0, from - 5), from, '\n');
 
+      // console.log('AutoCaps Debug:', { from, lookback, text: doc.textContent });
+
       // Regex: ends with [.!?] followed by whitespace(s), OR just newline
+      // We explicitly check for standard space, non-breaking space, etc.
+      // \s matches [ \f\n\r\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]
       if (/[.!?]\s+$/.test(lookback) || /\n$/.test(lookback) || lookback.length === 0) {
         shouldBeShift = true;
       }

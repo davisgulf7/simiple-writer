@@ -10,6 +10,7 @@ interface KeyboardProps {
   keyboardType?: 'basic' | 'with-numbers' | 'none';
   colorCodingEnabled?: boolean;
   isShiftActive?: boolean;
+  isCapsLockActive?: boolean;
   onToggleShift?: () => void;
   onToggleCaps?: () => void;
 }
@@ -61,6 +62,7 @@ export default function Keyboard({
   keyboardType = 'basic',
   colorCodingEnabled = false,
   isShiftActive = false,
+  isCapsLockActive = false,
   onToggleShift,
   onToggleCaps,
 }: KeyboardProps) {
@@ -106,8 +108,8 @@ export default function Keyboard({
 
   const renderKey = (key: string, extraClasses = '') => {
     const displayKey = isShiftActive && key.length === 1 ? key.toUpperCase() : key;
-    const isShift = key === 'SHIFT';
-    const keyHighlighted = isShift ? isShiftActive : isHighlighted(key);
+    // renderKey is for normal keys. Special keys use renderSpecialKey
+    const keyHighlighted = isHighlighted(key); // Normal keys use local highlight state
     const keyColor = colorCodingEnabled ? getKeyColor(key) : 'from-white/80 to-gray-100/60';
 
     return (
@@ -153,7 +155,10 @@ export default function Keyboard({
     textSize: string = 'text-base'
   ) => {
     const keyColor = colorCodingEnabled ? getKeyColor(key) : 'from-white/80 to-gray-100/60';
-    const keyHighlighted = key === 'SHIFT' || key === 'CAPSLOCK' ? isShiftActive : isHighlighted(key);
+
+    let keyHighlighted = isHighlighted(key);
+    if (key === 'SHIFT') keyHighlighted = isShiftActive || false;
+    if (key === 'CAPSLOCK') keyHighlighted = isCapsLockActive || false;
 
     return (
       <button

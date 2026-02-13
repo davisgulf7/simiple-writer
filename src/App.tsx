@@ -991,6 +991,7 @@ function App() {
                 keyboardType={settings.keyboardType}
                 colorCodingEnabled={settings.colorCodingEnabled}
                 isShiftActive={effectiveShift}
+                isCapsLockActive={isCapsLockActive}
                 onToggleShift={() => setIsOneShotShiftActive(!isOneShotShiftActive)}
                 onToggleCaps={() => setIsCapsLockActive(!isCapsLockActive)}
               />
