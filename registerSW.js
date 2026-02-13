@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/simiple-writer/sw.js', { scope: '/simiple-writer/' })})}
