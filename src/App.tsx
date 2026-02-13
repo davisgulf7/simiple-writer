@@ -36,6 +36,7 @@ function App() {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const editorRef = useRef<Editor | null>(null);
   const [settings, setSettings] = useState<UserSettings>(loadSettings());
+  const [isAutoReadEnabled, setIsAutoReadEnabled] = useState(false);
 
   useEffect(() => {
     const loadVoices = () => {
@@ -58,14 +59,72 @@ function App() {
     editorRef.current = editor;
   };
 
+  const speakText = (text: string, interrupt = true) => {
+    if (!text.trim()) return;
+
+    if (interrupt) {
+      window.speechSynthesis.cancel();
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = settings.readingSpeed;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    const selectedVoiceObj = voices.find(v => v.name === settings.selectedVoice);
+    if (selectedVoiceObj) {
+      utterance.voice = selectedVoiceObj;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleAutoRead = (trigger: 'SPACE' | 'PERIOD') => {
+    if (!isAutoReadEnabled || !editorRef.current) return;
+
+    const editor = editorRef.current;
+    const { from } = editor.state.selection;
+    const textBefore = editor.state.doc.textBetween(0, from, ' ');
+
+    if (trigger === 'SPACE') {
+      const words = textBefore.trim().split(/\s+/);
+      const lastWord = words[words.length - 1];
+      if (lastWord) speakText(lastWord, true);
+    } else if (trigger === 'PERIOD') {
+      const trimmed = textBefore.trim();
+      const punctuation = trimmed.slice(-1); // . ! ?
+
+      // 1. Speak the last word (interrupting previous)
+      const textWithoutLastChar = trimmed.slice(0, -1);
+      const words = textWithoutLastChar.split(/\s+/);
+      const lastWord = words[words.length - 1];
+
+      if (lastWord) {
+        speakText(lastWord, true);
+      }
+
+      // 2. Speak the sentence (queueing after the word)
+      const sentences = textBefore.split(/[.!?]+/);
+      const lastSentence = sentences[sentences.length - 2] || sentences[sentences.length - 1];
+
+      if (lastSentence) {
+        // We append the punctuation so it intones correctly
+        speakText(lastSentence.trim() + punctuation, false);
+      }
+    }
+  };
+
   const handleKeyPress = (key: string) => {
     if (!editorRef.current) return;
 
     const editor = editorRef.current;
     if (key === 'SPACE') {
       editor.commands.insertContent(' ');
+      handleAutoRead('SPACE');
     } else {
       editor.commands.insertContent(key);
+      if (key === '.' || key === '!' || key === '?') {
+        handleAutoRead('PERIOD');
+      }
     }
   };
 
@@ -91,21 +150,15 @@ function App() {
   const handleRead = () => {
     if (!editorRef.current) return;
 
-    const plainText = editorRef.current.getText();
-    if (!plainText) return;
+    const selection = editorRef.current.state.selection;
+    const selectedText = editorRef.current.state.doc.textBetween(selection.from, selection.to, ' ');
 
-    const utterance = new SpeechSynthesisUtterance(plainText);
-    utterance.rate = settings.readingSpeed;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    const selectedVoiceObj = voices.find(v => v.name === settings.selectedVoice);
-    if (selectedVoiceObj) {
-      utterance.voice = selectedVoiceObj;
+    if (selectedText.trim()) {
+      speakText(selectedText);
+    } else {
+      const allText = editorRef.current.getText();
+      speakText(allText);
     }
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
   };
 
   const handleExportSettings = () => {
@@ -767,6 +820,9 @@ function App() {
                 onSettingsClick={() => setIsSettingsOpen(true)}
                 minHeight={settings.keyboardType === 'none' ? '525px' : '210px'}
                 maxHeight={settings.keyboardType === 'none' ? '875px' : '350px'}
+                isAutoReadEnabled={isAutoReadEnabled}
+                onToggleAutoRead={() => setIsAutoReadEnabled(!isAutoReadEnabled)}
+                onAutoReadTrigger={handleAutoRead}
               />
             </div>
           </div>
