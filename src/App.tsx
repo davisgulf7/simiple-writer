@@ -83,11 +83,11 @@ function App() {
 
     const editor = editorRef.current;
     const { from } = editor.state.selection;
+    // Get all text up to the cursor
     const textBefore = editor.state.doc.textBetween(0, from, ' ');
 
     if (trigger === 'SPACE') {
-      // 1. Avoid re-reading on multiple spaces (check if char before the new space is also whitespace)
-      // textBefore includes the space we just added at the end
+      // 1. Avoid re-reading on multiple spaces
       if (textBefore.length >= 2 && /\s/.test(textBefore[textBefore.length - 2])) {
         return;
       }
@@ -104,21 +104,36 @@ function App() {
       const punctuation = trimmed.slice(-1); // . ! ?
 
       // 1. Speak the last word (interrupting previous)
+      // We look back to find the start of the last word
+      // trimmed is "Word." -> length 5. punctuation is ".".
+      // textWithoutLastChar is "Word".
       const textWithoutLastChar = trimmed.slice(0, -1);
-      const words = textWithoutLastChar.split(/\s+/);
-      const lastWord = words[words.length - 1];
+      const wordMatch = textWithoutLastChar.match(/(\S+)$/); // Find last sequence of non-whitespace
+      const lastWord = wordMatch ? wordMatch[0] : '';
 
       if (lastWord) {
         speakText(lastWord, true);
       }
 
       // 2. Speak the sentence (queueing after the word)
-      const sentences = textBefore.split(/[.!?]+/);
-      const lastSentence = sentences[sentences.length - 2] || sentences[sentences.length - 1];
+      // Find the start of the current sentence by looking backwards for . ! ?
+      // We ignore the very last character (which is the trigger punctuation)
+      let sentenceStart = 0;
+      const searchLimit = Math.max(0, textBefore.length - 1000); // Optimization: max lookback chars
+
+      // Iterate backwards from the character BEFORE the punctuation we just typed
+      for (let i = textBefore.length - 2; i >= searchLimit; i--) {
+        const char = textBefore[i];
+        if (char === '.' || char === '!' || char === '?') {
+          sentenceStart = i + 1;
+          break;
+        }
+      }
+
+      const lastSentence = textBefore.slice(sentenceStart).trim();
 
       if (lastSentence) {
-        // We append the punctuation so it intones correctly
-        speakText(lastSentence.trim() + punctuation, false);
+        speakText(lastSentence + punctuation, false);
       }
     }
   };
