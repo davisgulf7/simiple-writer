@@ -117,6 +117,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         alignments: ['left', 'center', 'right', 'justify'],
       }),
     ],
+    autofocus: false, // Explicitly disable autofocus on load
     content: content || '',
     onFocus: () => {
       // Check caps on focus
@@ -140,7 +141,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
     editorProps: {
       attributes: {
-        class: 'outline-none focus:outline-none text-left w-full',
+        class: 'outline-none focus:outline-none text-left w-full h-full', // Ensure text-left and full width
         style: `min-height: ${minHeight}`,
         autocapitalize: 'sentences',
       },
@@ -205,6 +206,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
+      // Prevent race condition where stale 'content' prop overwrites
+      // new user input while typing. Only update from prop if NOT focused,
+      // or if the difference is drastic (optional, but focus check is usually sufficient for single user).
+      if (editor.isFocused) return;
+
       editor.commands.setContent(content || '');
     }
   }, [content, editor]);
