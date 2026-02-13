@@ -1,5 +1,6 @@
 
 
+
 export const printDocument = (htmlContent: string, fontFamily: string, fontSize: string) => {
   // Create a new window for printing
   const printWindow = window.open('', '_blank');
@@ -8,6 +9,25 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
     alert('Please allow popups to print');
     return;
   }
+
+  // Parse the font size to determine a relative scale for headings
+  // If user selected "text-3xl" (large), we want headings to be even larger
+  // But for simplicity, we'll apply the user's font selection to the BODY,
+  // and let headings be relative (em) or just explicitly styled.
+
+  // Tailwind map to CSS values for the print window
+  const sizeMap: Record<string, string> = {
+    'text-sm': '0.875rem',
+    'text-base': '1rem',
+    'text-lg': '1.125rem',
+    'text-xl': '1.25rem',
+    'text-2xl': '1.5rem',
+    'text-3xl': '1.875rem',
+    'text-4xl': '2.25rem',
+    'text-5xl': '3rem',
+  };
+
+  const cssFontSize = sizeMap[fontSize] || '12pt';
 
   // Generate the full HTML structure for the print window
   const html = `
@@ -23,31 +43,36 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
             size: auto;
           }
           body {
-            font-family: ${fontFamily}, Arial, sans-serif !important;
-            font-size: ${fontSize} !important;
+            font-family: ${fontFamily}, Arial, sans-serif;
+            font-size: ${cssFontSize};
             line-height: 1.5;
             color: black;
             background: white;
-            margin: 0; /* Margin handled by @page */
+            margin: 0;
             padding: 0;
           }
-          /* Basic formatting preservation */
+          
+          /* Typography */
+          p { margin-bottom: 1em; }
           strong { font-weight: bold; }
           em { font-style: italic; }
           u { text-decoration: underline; }
-          h1 { get-font-size: 2em; font-weight: bold; margin-bottom: 0.5em; }
-          h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.5em; }
-          h3 { font-size: 1.25em; font-weight: bold; margin-bottom: 0.5em; }
+          
+          /* Headings relative to the base font size */
+          h1 { font-size: 2em; font-weight: bold; margin-bottom: 0.5em; margin-top: 0; }
+          h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; }
+          h3 { font-size: 1.25em; font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; }
+          
           ul, ol { margin: 1em 0; padding-left: 1.5em; }
           li { margin-bottom: 0.25em; }
-          p { margin-bottom: 1em; }
           
-          /* Remove any dark mode or custom background artifacts */
+          /* Clean up artifacts */
           * {
             background-color: transparent !important;
             color: black !important;
             box-shadow: none !important;
             text-shadow: none !important;
+            -webkit-print-color-adjust: exact;
           }
         </style>
       </head>
@@ -61,22 +86,23 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
   printWindow.document.write(html);
   printWindow.document.close(); // Finish writing
 
-  // Wait for content to load (images etc) then print
-  printWindow.onload = () => {
-    printWindow.focus();
-    printWindow.print();
-    // Optional: Close window after print (some browsers block this if print dialog is open)
-    // printWindow.close(); 
-  };
-
-  // Fallback for browsers where onload matches write completion
-  setTimeout(() => {
+  let hasPrinted = false;
+  const triggerPrint = () => {
+    if (hasPrinted) return;
+    hasPrinted = true;
     try {
       printWindow.focus();
       printWindow.print();
-      printWindow.close();
+      // printWindow.close(); // Optional: close after print
     } catch (e) {
       console.error("Print error", e);
     }
-  }, 500);
+  };
+
+  // Wait for content to load (images etc) then print
+  printWindow.onload = triggerPrint;
+
+  // Fallback for browsers where onload matches write completion
+  setTimeout(triggerPrint, 500);
 };
+
