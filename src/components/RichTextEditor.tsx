@@ -158,8 +158,8 @@ export default function RichTextEditor({
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 p-3 bg-black/40 rounded-xl border border-white/10 backdrop-blur-sm">
+    <div className="space-y-3 w-full">
+      <div className="flex flex-wrap items-center gap-2 p-3 bg-black/40 rounded-xl border border-white/10 backdrop-blur-sm w-full">
         <button
           onClick={() => setShowFormatting(!showFormatting)}
           className={`p-2 rounded-lg transition-all duration-200 ${showFormatting
@@ -441,7 +441,7 @@ export default function RichTextEditor({
       </div>
 
       <div
-        className="overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm print-container"
+        className="overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm print-container w-full"
         style={{
           backgroundColor: textAreaBgColor + 'E8',
           minHeight: minHeight,
@@ -449,7 +449,7 @@ export default function RichTextEditor({
         }}
       >
         <div
-          className={`${textAreaFontSize} font-medium tracking-wide leading-relaxed`}
+          className={`${textAreaFontSize} font-medium tracking-wide leading-relaxed w-full`}
           style={{
             color: textAreaTextColor,
             fontFamily: textAreaFont,
