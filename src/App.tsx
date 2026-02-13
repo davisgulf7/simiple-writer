@@ -186,21 +186,7 @@ function App() {
     }
   };
 
-  const handleExportNative = () => {
-    if (editorRef.current) {
-      const content = {
-        html: editorRef.current.getHTML(),
-        settings: settings
-      };
-      const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${currentFileName || 'project'}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  };
+
 
 
 
@@ -937,80 +923,74 @@ function App() {
       )}
 
       <div className="relative z-10 w-full max-w-5xl">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)] bg-white/10">
-            <FileText className="w-6 h-6 drop-shadow-lg text-white" />
+        <div className="flex flex-wrap items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mr-auto">
+            <div className="p-3 rounded-xl backdrop-blur-xl border border-white/10 shadow-[0_4px_8px_rgba(0,0,0,0.5),0_8px_16px_rgba(0,0,0,0.4)] bg-white/10">
+              <FileText className="w-6 h-6 drop-shadow-lg text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">CLICK-IT Writer</h1>
           </div>
-          <h1 className="text-3xl font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mr-auto">CLICK-IT Writer</h1>
 
-          {/* File Operations Group */}
-          <div className="flex items-center gap-2 mr-2 border-r border-white/10 pr-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* File Operations Group */}
+            <div className="flex items-center gap-2 border-r border-white/10 pr-4 mr-2">
+              <button
+                onClick={handleOpenClick}
+                className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
+                title="Open saved file"
+              >
+                <FolderOpen className="w-4 h-4" />
+                <span>Open</span>
+              </button>
+
+              <button
+                onClick={handleSaveClick}
+                className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
+                title="Save file"
+              >
+                <Save className="w-4 h-4" />
+                <span>Save</span>
+              </button>
+            </div>
+
+            {/* Import/Export Group */}
+            <div className="flex items-center gap-2 mr-2">
+              {/* Import Text */}
+              <label className="cursor-pointer px-3 py-2 bg-black/20 hover:bg-black/40 text-white/80 hover:text-white rounded-lg border border-white/10 transition-all text-sm flex items-center gap-2" title="Import plain text file">
+                <input
+                  type="file"
+                  accept=".txt"
+                  onChange={handleImportText}
+                  className="hidden"
+                />
+                <Upload className="w-4 h-4" />
+                <span className="hidden sm:inline">Import</span>
+              </label>
+
+              {/* Export Text */}
+              <button
+                onClick={handleExportText}
+                className="px-3 py-2 bg-black/20 hover:bg-black/40 text-white/80 hover:text-white rounded-lg border border-white/10 transition-all text-sm flex items-center gap-2"
+                title="Export as plain text"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">Export</span>
+              </button>
+            </div>
+
             <button
-              onClick={handleOpenClick}
+              onClick={() => {
+                if (editorRef.current) {
+                  printDocument(editorRef.current.getHTML());
+                }
+              }}
               className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
-              title="Open saved file"
+              title="Print document"
             >
-              <FolderOpen className="w-4 h-4" />
-              <span>Open</span>
-            </button>
-
-            <button
-              onClick={handleSaveClick}
-              className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
-              title="Save file"
-            >
-              <Save className="w-4 h-4" />
-              <span>Save</span>
+              <Printer className="w-4 h-4" />
+              <span>Print</span>
             </button>
           </div>
-
-          {/* Import/Export Group */}
-          <div className="flex items-center gap-2 mr-auto">
-            {/* Import Text */}
-            <label className="cursor-pointer px-3 py-2 bg-black/20 hover:bg-black/40 text-white/80 hover:text-white rounded-lg border border-white/10 transition-all text-sm flex items-center gap-2" title="Import plain text file">
-              <input
-                type="file"
-                accept=".txt"
-                onChange={handleImportText}
-                className="hidden"
-              />
-              <Upload className="w-4 h-4" />
-              <span className="hidden sm:inline">Import</span>
-            </label>
-
-            {/* Export Text */}
-            <button
-              onClick={handleExportText}
-              className="px-3 py-2 bg-black/20 hover:bg-black/40 text-white/80 hover:text-white rounded-lg border border-white/10 transition-all text-sm flex items-center gap-2"
-              title="Export as plain text"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Export</span>
-            </button>
-
-            {/* Export Project */}
-            <button
-              onClick={handleExportNative}
-              className="px-3 py-2 bg-black/20 hover:bg-black/40 text-blue-300/80 hover:text-blue-300 rounded-lg border border-blue-500/20 transition-all text-sm flex items-center gap-2"
-              title="Backup Project (JSON)"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Backup</span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => {
-              if (editorRef.current) {
-                printDocument(editorRef.current.getHTML());
-              }
-            }}
-            className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
-            title="Print document"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Print</span>
-          </button>
         </div>
         <div className="mb-8 relative w-full">
           <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-2xl border border-white/20 shadow-2xl w-full">
