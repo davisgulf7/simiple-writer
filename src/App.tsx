@@ -980,8 +980,7 @@ function App() {
 
         {settings.keyboardType !== 'none' && (
           <div className="relative">
-            <div className="relative overflow-hidden rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+            <div className="relative">
               <Keyboard
                 onKeyPress={handleKeyPress}
                 onDelete={handleDelete}
