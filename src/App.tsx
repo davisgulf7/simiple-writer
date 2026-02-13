@@ -12,6 +12,7 @@ import {
   importSettings,
   resetToDefaults,
 } from './utils/settingsManager';
+import { printDocument } from './utils/printHelpers';
 import {
   saveAsHTML,
   saveAsTXT,
@@ -881,7 +882,11 @@ function App() {
             </label>
 
             <button
-              onClick={() => window.print()}
+              onClick={() => {
+                if (editorRef.current) {
+                  printDocument(editorRef.current.getHTML());
+                }
+              }}
               className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
               title="Print document"
             >
