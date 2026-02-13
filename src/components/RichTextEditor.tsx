@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
@@ -33,7 +33,7 @@ import {
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
-  onEditorReady?: (editor: any) => void;
+  onEditorReady?: (editor: Editor) => void;
   textAreaFont: string;
   textAreaFontSize: string;
   textAreaTextColor: string;
@@ -41,14 +41,16 @@ interface RichTextEditorProps {
   onRead: () => void;
   onClear: () => void;
   onSettingsClick: () => void;
-  minHeight?: string;
-  maxHeight?: string;
+  minHeight: string;
+  maxHeight: string;
   isAutoReadEnabled: boolean;
   onToggleAutoRead: () => void;
   onAutoReadTrigger: (trigger: 'SPACE' | 'PERIOD' | 'RETURN') => void;
+  autoCapsEnabled: boolean;
+  onShiftChange: (isActive: boolean) => void;
 }
 
-export default function RichTextEditor({
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
   content,
   onChange,
   onEditorReady,
@@ -59,15 +61,23 @@ export default function RichTextEditor({
   onRead,
   onClear,
   onSettingsClick,
-  minHeight = '210px',
-  maxHeight = '350px',
+  minHeight,
+  maxHeight,
   isAutoReadEnabled,
   onToggleAutoRead,
   onAutoReadTrigger,
-}: RichTextEditorProps) {
+  autoCapsEnabled,
+  onShiftChange,
+}) => {
   const [showFormatting, setShowFormatting] = useState(false);
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
   const highlightMenuRef = useRef<HTMLDivElement>(null);
+  const [isShiftActive, setIsShiftActive] = useState(autoCapsEnabled); // Initialize based on setting
+
+  // Update parent when local shift state changes
+  useEffect(() => {
+    onShiftChange(isShiftActive);
+  }, [isShiftActive, onShiftChange]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -113,31 +123,60 @@ export default function RichTextEditor({
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
+      if (autoCapsEnabled) checkAutoCaps(editor);
+    },
+    onSelectionUpdate: ({ editor }) => {
+      if (autoCapsEnabled) checkAutoCaps(editor);
+    },
+    onCreate: ({ editor }) => {
+      if (onEditorReady) onEditorReady(editor);
+      if (autoCapsEnabled) checkAutoCaps(editor);
     },
     editorProps: {
       attributes: {
-        class: 'outline-none focus:outline-none text-left w-full', // Added text-left and w-full
+        class: 'outline-none focus:outline-none text-left w-full',
         style: `min-height: ${minHeight}`,
+        autocapitalize: 'sentences',
       },
       handleKeyDown: (view, e) => {
         if (e.key === ' ' || e.code === 'Space') {
           const { from } = view.state.selection;
-          // Check if there is already a space before the cursor
           const textBefore = view.state.doc.textBetween(Math.max(0, from - 1), from);
-          if (textBefore === ' ') {
-            return false; // Don't trigger if already a space
-          }
+          if (textBefore === ' ') return false;
           setTimeout(() => onAutoReadTrigger('SPACE'), 0);
         } else if (e.key === '.' || e.key === '!' || e.key === '?') {
           setTimeout(() => onAutoReadTrigger('PERIOD'), 0);
         } else if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter') {
-          // Increase timeout slightly to ensure new paragraph creation and state update is complete
           setTimeout(() => onAutoReadTrigger('RETURN'), 50);
         }
-        return false; // Allow default behavior
+        return false;
       },
     },
   });
+
+  const checkAutoCaps = (currentEditor = editor) => {
+    if (!currentEditor || !autoCapsEnabled) return;
+
+    const { selection, doc } = currentEditor.state;
+    const { from } = selection;
+
+    // 1. Empty document / Start -> Caps
+    if (doc.textContent.length === 0 || from === 1) {
+      setIsShiftActive(true);
+      return;
+    }
+
+    // 2. Check context
+    // Look back 5 chars for sentence terminators
+    const lookback = doc.textBetween(Math.max(0, from - 5), from, '\n');
+
+    // Regex: ends with [.!?] followed by whitespace(s), OR just newline
+    if (/[.!?]\s+$/.test(lookback) || /\n$/.test(lookback) || lookback.length === 0) {
+      setIsShiftActive(true);
+    } else {
+      setIsShiftActive(false);
+    }
+  };
 
   /* Removed manual useEffect listener */
 
@@ -461,3 +500,5 @@ export default function RichTextEditor({
     </div>
   );
 }
+
+export default RichTextEditor;

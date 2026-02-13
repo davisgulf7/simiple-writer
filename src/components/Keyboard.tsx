@@ -9,6 +9,8 @@ interface KeyboardProps {
   keyFontSize?: string;
   keyboardType?: 'basic' | 'with-numbers' | 'none';
   colorCodingEnabled?: boolean;
+  isShiftActive?: boolean;
+  onToggleShift?: () => void;
 }
 
 const keyboardLayout = [
@@ -49,10 +51,19 @@ const getKeyColor = (key: string): string => {
   return 'from-white/80 to-gray-100/60';
 };
 
-export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sans-serif', keyFontSize = 'text-sm', keyboardType = 'basic', colorCodingEnabled = false }: KeyboardProps) {
+export default function Keyboard({
+  onKeyPress,
+  onDelete,
+  onReturn,
+  keyFont = 'sans-serif',
+  keyFontSize = 'text-sm',
+  keyboardType = 'basic',
+  colorCodingEnabled = false,
+  isShiftActive = false,
+  onToggleShift
+}: KeyboardProps) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [highlightedKeys, setHighlightedKeys] = useState<Set<string>>(new Set());
-  const [isShiftActive, setIsShiftActive] = useState(false);
 
   const handleKeyClick = (key: string) => {
     setSelectedKey(key);
@@ -76,9 +87,9 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
     } else if (key === 'RETURN') {
       onReturn?.();
     } else if (key === 'SHIFT') {
-      setIsShiftActive(!isShiftActive);
+      onToggleShift?.();
     } else if (key === 'CAPSLOCK') {
-      setIsShiftActive(!isShiftActive);
+      onToggleShift?.();
     } else if (key === 'TAB') {
       onKeyPress?.('\t');
     } else {

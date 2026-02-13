@@ -13,6 +13,7 @@ export interface UserSettings {
   backgroundStyle: 'glass' | 'flat';
   keyboardType: 'basic' | 'with-numbers' | 'none';
   colorCodingEnabled: boolean;
+  autoCapsEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -30,6 +31,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   backgroundStyle: 'glass',
   keyboardType: 'basic',
   colorCodingEnabled: false,
+  autoCapsEnabled: true,
 };
 
 const STORAGE_KEY = 'click-it-writer-settings';

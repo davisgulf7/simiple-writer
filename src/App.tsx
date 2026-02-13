@@ -8,8 +8,6 @@ import {
   type UserSettings,
   saveSettings,
   loadSettings,
-  exportSettings,
-  importSettings,
   resetToDefaults,
 } from './utils/settingsManager';
 import { printDocument } from './utils/printHelpers';
@@ -45,6 +43,7 @@ function App() {
   const [fileManagerMode, setFileManagerMode] = useState<'open' | 'save'>('open');
   const [currentFileId, setCurrentFileId] = useState<string | null>(null);
   const [currentFileName, setCurrentFileName] = useState<string>('');
+  const [isShiftActive, setIsShiftActive] = useState(false);
 
   useEffect(() => {
     const loadVoices = () => {
@@ -320,32 +319,9 @@ function App() {
     setResponse('');
   };
 
-  const handleRead = () => {
-    if (!editorRef.current) return;
 
-    const selection = editorRef.current.state.selection;
-    const selectedText = editorRef.current.state.doc.textBetween(selection.from, selection.to, ' ');
 
-    if (selectedText.trim()) {
-      speakText(selectedText);
-    } else {
-      const allText = editorRef.current.getText();
-      speakText(allText);
-    }
-  };
 
-  const handleExportSettings = () => {
-    exportSettings(settings);
-  };
-
-  const handleImportSettings = async (file: File) => {
-    try {
-      const imported = await importSettings(file);
-      setSettings(imported);
-    } catch (error) {
-      alert('Failed to import settings. Please check the file format.');
-    }
-  };
 
   const handleResetToDefaults = () => {
     if (window.confirm('Reset all settings to default values? This cannot be undone.')) {
@@ -490,35 +466,20 @@ function App() {
             <div className="border-t border-white/10 pt-6">
               <h3 className="text-lg font-semibold text-blue-300 mb-4">Settings Management</h3>
               <div className="space-y-3">
-                <button
-                  onClick={handleExportSettings}
-                  className="w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg transition-all border border-blue-400/30 text-left"
-                >
-                  <div className="font-medium">Export Settings</div>
-                  <div className="text-sm text-blue-300/70 mt-1">Save your current settings to a file</div>
-                </button>
-
-                <label className="block">
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        handleImportSettings(file);
-                        e.target.value = '';
-                      }
-                    }}
-                    className="hidden"
-                    id="import-settings"
-                  />
-                  <div
-                    onClick={() => document.getElementById('import-settings')?.click()}
-                    className="w-full px-4 py-3 bg-green-500/20 hover:bg-green-500/30 text-green-200 rounded-lg transition-all border border-green-400/30 cursor-pointer"
-                  >
-                    <div className="font-medium">Import Settings</div>
-                    <div className="text-sm text-green-300/70 mt-1">Load settings from a file</div>
+                <label className="flex items-center p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                  <div className="flex-1">
+                    <div className="font-medium text-white mb-1">Auto-Capitalization</div>
+                    <div className="text-sm text-gray-400">Automatically capitalize the first letter of new sentences</div>
                   </div>
+                  <div className={`w-12 h-6 rounded-full p-1 transition-all duration-300 ${settings.autoCapsEnabled ? 'bg-blue-500' : 'bg-gray-600'}`}>
+                    <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${settings.autoCapsEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={settings.autoCapsEnabled}
+                    onChange={(e) => setSettings({ ...settings, autoCapsEnabled: e.target.checked })}
+                    className="hidden"
+                  />
                 </label>
 
                 <button
@@ -1005,7 +966,7 @@ function App() {
                 textAreaFontSize={settings.textAreaFontSize}
                 textAreaTextColor={settings.textAreaTextColor}
                 textAreaBgColor={settings.textAreaBgColor}
-                onRead={handleRead}
+                onRead={() => speakText(response)}
                 onClear={handleClear}
                 onSettingsClick={() => setIsSettingsOpen(true)}
                 minHeight={settings.keyboardType === 'none' ? '525px' : '210px'}
@@ -1013,6 +974,8 @@ function App() {
                 isAutoReadEnabled={isAutoReadEnabled}
                 onToggleAutoRead={() => setIsAutoReadEnabled(!isAutoReadEnabled)}
                 onAutoReadTrigger={handleAutoRead}
+                autoCapsEnabled={settings.autoCapsEnabled}
+                onShiftChange={setIsShiftActive}
               />
             </div>
           </div>
@@ -1034,6 +997,8 @@ function App() {
               keyFontSize={settings.keyFontSize}
               keyboardType={settings.keyboardType}
               colorCodingEnabled={settings.colorCodingEnabled}
+              isShiftActive={isShiftActive}
+              onToggleShift={() => setIsShiftActive(!isShiftActive)}
             />
           </div>
         )}
