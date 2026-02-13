@@ -61,8 +61,11 @@ function App() {
 
   const cleanForSpeech = (text: string): string => {
     // Remove Zero Width Space, Byte Order Mark, and other non-printable characters
-    // Keep basic punctuation, letters, numbers, and whitespace
-    return text.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+    // Normalize ALL whitespace (including non-breaking spaces) to regular spaces
+    return text
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+      .replace(/[\u00A0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/g, ' ')
+      .trim();
   };
 
   const speakText = (text: string, interrupt = true) => {
@@ -147,7 +150,11 @@ function App() {
       const lastSentence = textBefore.slice(sentenceStart).trim();
 
       if (lastSentence) {
-        speakText(lastSentence + punctuation, false);
+        if (lastSentence.endsWith(punctuation)) {
+          speakText(lastSentence, false);
+        } else {
+          speakText(lastSentence + punctuation, false);
+        }
       }
     }
   };
