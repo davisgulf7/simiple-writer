@@ -150,7 +150,10 @@ function App() {
 
       // Iterate backwards; if trigger is PERIOD, skip the last char. If RETURN, skip the last char (newline).
       // Both cases effectively want to find the PREVIOUS punctuation/newline.
-      const startSearchIndex = textBefore.length - 2;
+      let startSearchIndex = textBefore.length - 2;
+
+      // Fallback: If textBefore is short (e.g. just a newline), start from 0
+      if (startSearchIndex < 0) startSearchIndex = 0;
 
       for (let i = startSearchIndex; i >= searchLimit; i--) {
         const char = textBefore[i];
