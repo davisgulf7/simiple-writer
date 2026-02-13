@@ -11,7 +11,7 @@
   margin: 0;
 }
 
-.ProseMirror p + p {
+.ProseMirror p+p {
   margin-top: 0.5em;
 }
 
@@ -100,26 +100,39 @@
 
 @media print {
   @page {
-    margin: 2cm;
+    margin: 1in;
+    size: auto;
   }
 
   body {
     background: white !important;
     color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Hide UI elements */
   button,
   .keyboard-container,
-  h1, /* Hide title */
-  label, /* Hide Open button */
-  .fixed, /* Hide background */
-  svg {
-    display: none !important;
+  h1,
+  /* Hide title */
+  label,
+  /* Hide Open button */
+  .fixed,
+  /* Hide background */
+  svg,
+  .overflow-hidden {
+    /* Hide outer container frame */
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
   }
 
   /* Ensure content is visible */
   #root,
+  .print-container,
   .ProseMirror {
     display: block !important;
     width: 100% !important;
@@ -131,9 +144,23 @@
   /* Reset container widths */
   .max-w-5xl {
     max-width: none !important;
+    width: 100% !important;
   }
 
   /* Clean up editor appearance */
+  .print-container {
+    min-height: auto !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Clean up ProseMirror inside print container */
   .ProseMirror {
     min-height: auto !important;
     height: auto !important;
@@ -150,9 +177,17 @@
     text-shadow: none !important;
     box-shadow: none !important;
   }
-  
+
   /* Preserve specific formatting but ensure readability */
-  .ProseMirror strong { font-weight: bold; }
-  .ProseMirror em { font-style: italic; }
-  .ProseMirror u { text-decoration: underline; }
+  .ProseMirror strong {
+    font-weight: bold;
+  }
+
+  .ProseMirror em {
+    font-style: italic;
+  }
+
+  .ProseMirror u {
+    text-decoration: underline;
+  }
 }

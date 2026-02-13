@@ -441,7 +441,7 @@ export default function RichTextEditor({
       </div>
 
       <div
-        className="overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+        className="overflow-y-auto p-4 rounded-xl border border-white/10 backdrop-blur-sm print-container"
         style={{
           backgroundColor: textAreaBgColor + 'E8',
           minHeight: minHeight,
