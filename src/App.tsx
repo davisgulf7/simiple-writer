@@ -8,13 +8,13 @@ import {
   type UserSettings,
   saveSettings,
   loadSettings,
+  exportSettings,
+  importSettings,
   resetToDefaults,
 } from './utils/settingsManager';
 import { printDocument } from './utils/printHelpers';
 import {
   saveAsTXT,
-  exportAsDOCX,
-  importFile
 } from './utils/fileHelpers';
 import { saveFile, loadFile } from './utils/fileSystem';
 import FileManagerModal from './components/FileManagerModal';
@@ -323,6 +323,20 @@ function App() {
 
 
 
+  const handleExportSettings = () => {
+    exportSettings(settings);
+  };
+
+  const handleImportSettings = async (file: File) => {
+    try {
+      const imported = await importSettings(file);
+      setSettings(imported);
+      alert('Settings imported successfully!');
+    } catch (error) {
+      alert('Failed to import settings. Please check the file format.');
+    }
+  };
+
   const handleResetToDefaults = () => {
     if (window.confirm('Reset all settings to default values? This cannot be undone.')) {
       const defaults = resetToDefaults();
@@ -359,34 +373,6 @@ function App() {
 
 
 
-  const handleExportDOCX = async () => {
-    if (!editorRef.current) return;
-    const html = editorRef.current.getHTML();
-    await exportAsDOCX(html, 'my-clickit-document');
-  };
-
-  const handleExportTXT = () => {
-    if (!editorRef.current) return;
-    const html = editorRef.current.getHTML();
-    saveAsTXT(html, 'my-clickit-document');
-  };
-
-  const handleImportDocument = async (file: File) => {
-    if (!editorRef.current) return;
-    try {
-      const content = await importFile(file);
-      if (content) {
-        // When importing a document (not a project), we might want to append or replace.
-        // For now, let's replace to keep it simple, or we could insert at cursor.
-        // Let's replace for consistency with "Open".
-        editorRef.current.commands.setContent(content);
-        setResponse(content);
-      }
-    } catch (error) {
-      alert('Failed to import document.');
-    }
-  };
-
   const glassRgb = hexToRgb(settings.glassColor);
 
   const renderTabContent = () => {
@@ -394,75 +380,6 @@ function App() {
       case 'general':
         return (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-blue-300 mb-4">File Management</h3>
-
-              <div className="space-y-6">
-                {/* Export Section */}
-                <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Export Document</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={handleExportDOCX}
-                      className="px-4 py-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 rounded-lg transition-all border border-indigo-400/30 flex flex-col items-center justify-center gap-1"
-                    >
-                      <span className="font-bold text-lg">.DOCX</span>
-                      <span className="text-xs opacity-70">Word Doc</span>
-                    </button>
-                    <button
-                      onClick={handleExportTXT}
-                      className="px-4 py-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 rounded-lg transition-all border border-indigo-400/30 flex flex-col items-center justify-center gap-1"
-                    >
-                      <span className="font-bold text-lg">.TXT</span>
-                      <span className="text-xs opacity-70">Plain Text</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Import Section */}
-                <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Import Document</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="cursor-pointer px-4 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg transition-all border border-emerald-400/30 flex flex-col items-center justify-center gap-1">
-                      <input
-                        type="file"
-                        accept=".docx"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleImportDocument(file);
-                            e.target.value = '';
-                            setIsSettingsOpen(false);
-                          }
-                        }}
-                        className="hidden"
-                      />
-                      <span className="font-bold text-lg">.DOCX</span>
-                      <span className="text-xs opacity-70">Word Doc</span>
-                    </label>
-
-                    <label className="cursor-pointer px-4 py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg transition-all border border-emerald-400/30 flex flex-col items-center justify-center gap-1">
-                      <input
-                        type="file"
-                        accept=".txt"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleImportDocument(file);
-                            e.target.value = '';
-                            setIsSettingsOpen(false);
-                          }
-                        }}
-                        className="hidden"
-                      />
-                      <span className="font-bold text-lg">.TXT</span>
-                      <span className="text-xs opacity-70">Plain Text</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="border-t border-white/10 pt-6">
               <h3 className="text-lg font-semibold text-blue-300 mb-4">Settings Management</h3>
               <div className="space-y-3">
@@ -480,6 +397,36 @@ function App() {
                     onChange={(e) => setSettings({ ...settings, autoCapsEnabled: e.target.checked })}
                     className="hidden"
                   />
+                </label>
+
+                <button
+                  onClick={handleExportSettings}
+                  className="w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg transition-all border border-blue-400/30 text-left"
+                >
+                  <div className="font-medium">Export Settings</div>
+                  <div className="text-sm text-blue-300/70 mt-1">Save your current settings to a file</div>
+                </button>
+
+                <label className="block">
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleImportSettings(file);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="hidden"
+                    id="import-settings"
+                  />
+                  <div
+                    className="w-full px-4 py-3 bg-green-500/20 hover:bg-green-500/30 text-green-200 rounded-lg transition-all border border-green-400/30 cursor-pointer"
+                  >
+                    <div className="font-medium">Import Settings</div>
+                    <div className="text-sm text-green-300/70 mt-1">Load settings from a file</div>
+                  </div>
                 </label>
 
                 <button
