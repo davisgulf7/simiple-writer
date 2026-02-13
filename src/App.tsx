@@ -148,8 +148,9 @@ function App() {
       let sentenceStart = 0;
       const searchLimit = Math.max(0, textBefore.length - 1000);
 
-      // Iterate backwards; if trigger is PERIOD, skip the last char. If RETURN, start from end.
-      const startSearchIndex = trigger === 'PERIOD' ? textBefore.length - 2 : textBefore.length - 1;
+      // Iterate backwards; if trigger is PERIOD, skip the last char. If RETURN, skip the last char (newline).
+      // Both cases effectively want to find the PREVIOUS punctuation/newline.
+      const startSearchIndex = textBefore.length - 2;
 
       for (let i = startSearchIndex; i >= searchLimit; i--) {
         const char = textBefore[i];
