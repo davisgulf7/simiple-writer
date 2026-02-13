@@ -940,7 +940,7 @@ function App() {
                 title="Open saved file"
               >
                 <FolderOpen className="w-4 h-4" />
-                <span>Open</span>
+                <span className="hidden sm:inline">Open</span>
               </button>
 
               <button
@@ -949,7 +949,7 @@ function App() {
                 title="Save file"
               >
                 <Save className="w-4 h-4" />
-                <span>Save</span>
+                <span className="hidden sm:inline">Save</span>
               </button>
             </div>
 
@@ -988,7 +988,7 @@ function App() {
               title="Print document"
             >
               <Printer className="w-4 h-4" />
-              <span>Print</span>
+              <span className="hidden sm:inline">Print</span>
             </button>
           </div>
         </div>
