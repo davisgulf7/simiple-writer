@@ -196,6 +196,7 @@ export default function Keyboard({ onKeyPress, onDelete, onReturn, keyFont = 'sa
           {keyboardLayout[2].map((key) => renderKey(key))}
           {renderKey(',')}
           {renderKey('.')}
+          {renderKey('?')}
         </div>
 
         <div className="flex justify-center gap-2 pt-2">
