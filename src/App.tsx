@@ -1012,53 +1012,52 @@ function App() {
             <span>Print</span>
           </button>
         </div>
-      </div>
+        <div className="mb-8 relative w-full">
+          <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-2xl border border-white/20 shadow-2xl w-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
-      <div className="mb-8 relative w-full">
-        <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-2xl border border-white/20 shadow-2xl w-full">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-
-          <div className="relative p-6 w-full">
-            <RichTextEditor
-              content={response}
-              onChange={setResponse}
-              onEditorReady={handleEditorReady}
-              textAreaFont={settings.textAreaFont}
-              textAreaFontSize={settings.textAreaFontSize}
-              textAreaTextColor={settings.textAreaTextColor}
-              textAreaBgColor={settings.textAreaBgColor}
-              onRead={handleRead}
-              onClear={handleClear}
-              onSettingsClick={() => setIsSettingsOpen(true)}
-              minHeight={settings.keyboardType === 'none' ? '525px' : '210px'}
-              maxHeight={settings.keyboardType === 'none' ? '875px' : '350px'}
-              isAutoReadEnabled={isAutoReadEnabled}
-              onToggleAutoRead={() => setIsAutoReadEnabled(!isAutoReadEnabled)}
-              onAutoReadTrigger={handleAutoRead}
-            />
+            <div className="relative p-6 w-full">
+              <RichTextEditor
+                content={response}
+                onChange={setResponse}
+                onEditorReady={handleEditorReady}
+                textAreaFont={settings.textAreaFont}
+                textAreaFontSize={settings.textAreaFontSize}
+                textAreaTextColor={settings.textAreaTextColor}
+                textAreaBgColor={settings.textAreaBgColor}
+                onRead={handleRead}
+                onClear={handleClear}
+                onSettingsClick={() => setIsSettingsOpen(true)}
+                minHeight={settings.keyboardType === 'none' ? '525px' : '210px'}
+                maxHeight={settings.keyboardType === 'none' ? '875px' : '350px'}
+                isAutoReadEnabled={isAutoReadEnabled}
+                onToggleAutoRead={() => setIsAutoReadEnabled(!isAutoReadEnabled)}
+                onAutoReadTrigger={handleAutoRead}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {settings.keyboardType !== 'none' && (
-        <div className="relative">
-          <div
-            className="absolute inset-0 rounded-3xl blur-3xl -z-10"
-            style={{
-              background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.05))`
-            }}
-          />
-          <Keyboard
-            onKeyPress={handleKeyPress}
-            onDelete={handleDelete}
-            onReturn={handleReturn}
-            keyFont={settings.keyFont}
-            keyFontSize={settings.keyFontSize}
-            keyboardType={settings.keyboardType}
-            colorCodingEnabled={settings.colorCodingEnabled}
-          />
-        </div>
-      )}
+        {settings.keyboardType !== 'none' && (
+          <div className="relative">
+            <div
+              className="absolute inset-0 rounded-3xl blur-3xl -z-10"
+              style={{
+                background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.05))`
+              }}
+            />
+            <Keyboard
+              onKeyPress={handleKeyPress}
+              onDelete={handleDelete}
+              onReturn={handleReturn}
+              keyFont={settings.keyFont}
+              keyFontSize={settings.keyFontSize}
+              keyboardType={settings.keyboardType}
+              colorCodingEnabled={settings.colorCodingEnabled}
+            />
+          </div>
+        )}
+      </div>
 
 
 
