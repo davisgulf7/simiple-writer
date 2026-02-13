@@ -365,7 +365,7 @@ function App() {
     if (!editorRef.current) return;
     editorRef.current.commands.clearContent();
     setResponse('');
-    setShouldAutoCap(true); // Reset to auto-cap (start of doc)
+    // setShouldAutoCap(true); // REMOVED: Let focus handler decide caps state
     setIsOneShotShiftActive(false);
   };
 
