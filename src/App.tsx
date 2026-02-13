@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Keyboard from './components/Keyboard';
 import RichTextEditor from './components/RichTextEditor';
-import { FileText, X, Image, Trash2 } from 'lucide-react';
+import { FileText, Printer, Image, Trash2, X } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
 import ReloadPrompt from './components/ReloadPrompt';
 import {
@@ -879,6 +879,15 @@ function App() {
               <FileText className="w-4 h-4" />
               <span>Open</span>
             </label>
+
+            <button
+              onClick={() => window.print()}
+              className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
+              title="Print document"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Print</span>
+            </button>
           </div>
         </div>
 
