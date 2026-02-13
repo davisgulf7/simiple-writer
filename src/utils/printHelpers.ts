@@ -93,7 +93,7 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
     try {
       printWindow.focus();
       printWindow.print();
-      // printWindow.close(); // Optional: close after print
+      printWindow.close();
     } catch (e) {
       console.error("Print error", e);
     }
