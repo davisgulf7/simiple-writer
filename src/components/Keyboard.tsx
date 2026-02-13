@@ -162,6 +162,7 @@ export default function Keyboard({
 
     return (
       <button
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => handleKeyClick(key)}
         className={`
           relative ${widthClass} h-16 rounded-xl font-semibold ${textSize}
@@ -191,7 +192,10 @@ export default function Keyboard({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-8">
+    <div
+      className="w-full max-w-5xl mx-auto p-8"
+      onMouseDown={(e) => e.preventDefault()}
+    >
       <div className="space-y-3">
         {keyboardType === 'with-numbers' && (
           <div className="flex justify-center gap-2">
