@@ -722,13 +722,14 @@ function App() {
           <div className="flex gap-2">
             <button
               onClick={handleSaveProject}
-              className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg backdrop-blur-md border border-blue-400/30 font-medium transition-all text-sm flex items-center gap-2"
+              className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
               title="Save project as HTML"
             >
+              <FileText className="w-4 h-4" />
               <span>Save</span>
             </button>
 
-            <label className="cursor-pointer px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 rounded-lg backdrop-blur-md border border-emerald-400/30 font-medium transition-all text-sm flex items-center gap-2" title="Open HTML project file">
+            <label className="cursor-pointer px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm" title="Open HTML project file">
               <input
                 type="file"
                 accept=".html,.htm"
@@ -741,6 +742,7 @@ function App() {
                 }}
                 className="hidden"
               />
+              <FileText className="w-4 h-4" />
               <span>Open</span>
             </label>
           </div>
