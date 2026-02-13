@@ -69,28 +69,6 @@ export default function RichTextEditor({
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
   const highlightMenuRef = useRef<HTMLDivElement>(null);
 
-  // Handle physical keyboard events for Auto-Read
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === ' ' || e.code === 'Space') {
-        onAutoReadTrigger('SPACE');
-      } else if (e.key === '.' || e.key === '!' || e.key === '?') {
-        onAutoReadTrigger('PERIOD');
-      }
-    };
-
-    const editorElement = document.querySelector('.ProseMirror');
-    if (editorElement) {
-      editorElement.addEventListener('keydown', handleKeyDown as any);
-    }
-
-    return () => {
-      if (editorElement) {
-        editorElement.removeEventListener('keydown', handleKeyDown as any);
-      }
-    };
-  }, [onAutoReadTrigger]);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (highlightMenuRef.current && !highlightMenuRef.current.contains(event.target as Node)) {
@@ -107,6 +85,7 @@ export default function RichTextEditor({
     };
   }, [showHighlightMenu]);
 
+  // Handle physical keyboard events for Auto-Read
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -137,11 +116,41 @@ export default function RichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: 'outline-none focus:outline-none',
+        class: 'outline-none focus:outline-none text-left', // Added text-left
         style: `min-height: ${minHeight}`,
       },
     },
   });
+
+  // Handle physical keyboard events for Auto-Read
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!editor) return;
+
+      if (e.key === ' ' || e.code === 'Space') {
+        const { from } = editor.state.selection;
+        // Check if there is already a space before the cursor
+        const textBefore = editor.state.doc.textBetween(Math.max(0, from - 1), from);
+        if (textBefore === ' ') {
+          return; // Don't trigger if already a space (prevent double-read on 2nd space)
+        }
+        onAutoReadTrigger('SPACE');
+      } else if (e.key === '.' || e.key === '!' || e.key === '?') {
+        onAutoReadTrigger('PERIOD');
+      }
+    };
+
+    const editorElement = document.querySelector('.ProseMirror');
+    if (editorElement) {
+      editorElement.addEventListener('keydown', handleKeyDown as any);
+    }
+
+    return () => {
+      if (editorElement) {
+        editorElement.removeEventListener('keydown', handleKeyDown as any);
+      }
+    };
+  }, [onAutoReadTrigger, editor]);
 
   useEffect(() => {
     if (editor && onEditorReady) {
