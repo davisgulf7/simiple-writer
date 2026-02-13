@@ -86,9 +86,19 @@ function App() {
     const textBefore = editor.state.doc.textBetween(0, from, ' ');
 
     if (trigger === 'SPACE') {
+      // 1. Avoid re-reading on multiple spaces (check if char before the new space is also whitespace)
+      // textBefore includes the space we just added at the end
+      if (textBefore.length >= 2 && /\s/.test(textBefore[textBefore.length - 2])) {
+        return;
+      }
+
       const words = textBefore.trim().split(/\s+/);
       const lastWord = words[words.length - 1];
-      if (lastWord) speakText(lastWord, true);
+
+      // 2. Avoid re-reading if word ends with punctuation (handled by PERIOD trigger)
+      if (lastWord && !/[.!?]$/.test(lastWord)) {
+        speakText(lastWord, true);
+      }
     } else if (trigger === 'PERIOD') {
       const trimmed = textBefore.trim();
       const punctuation = trimmed.slice(-1); // . ! ?
