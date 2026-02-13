@@ -957,10 +957,10 @@ function App() {
             <button
               onClick={handleSaveClick}
               className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
-              title={currentFileId ? "Save changes" : "Save as new file"}
+              title="Save file"
             >
               <Save className="w-4 h-4" />
-              <span>{currentFileId ? 'Save' : 'Save As'}</span>
+              <span>Save</span>
             </button>
           </div>
 
@@ -975,7 +975,7 @@ function App() {
                 className="hidden"
               />
               <Upload className="w-4 h-4" />
-              <span className="hidden sm:inline">Import txt</span>
+              <span className="hidden sm:inline">Import</span>
             </label>
 
             {/* Export Text */}
@@ -985,7 +985,7 @@ function App() {
               title="Export as plain text"
             >
               <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Export txt</span>
+              <span className="hidden sm:inline">Export</span>
             </button>
 
             {/* Export Project */}

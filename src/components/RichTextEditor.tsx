@@ -116,7 +116,7 @@ export default function RichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: 'outline-none focus:outline-none text-left', // Added text-left
+        class: 'outline-none focus:outline-none text-left w-full', // Added text-left and w-full
         style: `min-height: ${minHeight}`,
       },
       handleKeyDown: (view, e) => {
