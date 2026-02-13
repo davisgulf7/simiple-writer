@@ -1,7 +1,7 @@
 
 
 
-export const printDocument = (htmlContent: string, fontFamily: string, fontSize: string) => {
+export const printDocument = (htmlContent: string) => {
   // Create a new window for printing
   const printWindow = window.open('', '_blank');
 
@@ -16,18 +16,7 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
   // and let headings be relative (em) or just explicitly styled.
 
   // Tailwind map to CSS values for the print window
-  const sizeMap: Record<string, string> = {
-    'text-sm': '0.875rem',
-    'text-base': '1rem',
-    'text-lg': '1.125rem',
-    'text-xl': '1.25rem',
-    'text-2xl': '1.5rem',
-    'text-3xl': '1.875rem',
-    'text-4xl': '2.25rem',
-    'text-5xl': '3rem',
-  };
 
-  const cssFontSize = sizeMap[fontSize] || '12pt';
 
   // Generate the full HTML structure for the print window
   const html = `
@@ -43,8 +32,8 @@ export const printDocument = (htmlContent: string, fontFamily: string, fontSize:
             size: auto;
           }
           body {
-            font-family: ${fontFamily}, Arial, sans-serif;
-            font-size: ${cssFontSize};
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
             line-height: 1.5;
             color: black;
             background: white;
