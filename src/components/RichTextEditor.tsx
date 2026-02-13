@@ -47,8 +47,7 @@ interface RichTextEditorProps {
   onToggleAutoRead: () => void;
   onAutoReadTrigger: (trigger: 'SPACE' | 'PERIOD' | 'RETURN') => void;
   autoCapsEnabled: boolean;
-  onShiftChange: (isActive: boolean) => void;
-  isShiftActive: boolean; // Add this prop
+  onAutoCapsStateChange: (isActive: boolean) => void; // New prop
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -68,13 +67,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onToggleAutoRead,
   onAutoReadTrigger,
   autoCapsEnabled,
-  onShiftChange,
-  isShiftActive, // Destructure prop
+  onAutoCapsStateChange,
 }) => {
   const [showFormatting, setShowFormatting] = useState(false);
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
   const highlightMenuRef = useRef<HTMLDivElement>(null);
-  // Removed local isShiftActive state and effect
+
+  // Update parent when local shift state logic runs
+  // Note: we are removing local isShiftActive state and logic from here
+  // and purely reporting "should be capped" to parent.
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -122,8 +123,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       if (editor && autoCapsEnabled) checkAutoCaps(editor, true);
     },
     onBlur: () => {
-      // Reset shift on blur
-      onShiftChange(false);
+      // Reset auto-caps on blur
+      onAutoCapsStateChange(false);
     },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
@@ -183,21 +184,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     }
 
-    // Only update if current state matches our expectation
-    // This allows manual override (caps lock) NOT to be fought against *if* we wanted that,
-    // but the user complained about sticking shift.
-    // The key here is: we only turn shift ON if needed.
-    // If we think it should be OFF, we turn it OFF.
-    // BUT the user might have manually Shifted. 
-    // However, for "Auto-Caps", we want to enforce the rule.
-    // If the user presses Shift manually, App.tsx toggles it. 
-    // This function runs on selection update (every cursor move/type).
-    // If we just typed a character, we are not at start of sentence, so shouldBeShift = false.
-    // So this will turn it OFF after typing. Perfect.
-
-    if (isShiftActive !== shouldBeShift) {
-      onShiftChange(shouldBeShift);
-    }
+    // Purely report status to parent. DO NOT check previous state here, 
+    // let parent handle diffing if necessary, or just report it.
+    // React state updates are cheap if value is same.
+    onAutoCapsStateChange(shouldBeShift);
   };
 
   /* Removed manual useEffect listener */

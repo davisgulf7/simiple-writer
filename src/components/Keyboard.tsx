@@ -11,6 +11,7 @@ interface KeyboardProps {
   colorCodingEnabled?: boolean;
   isShiftActive?: boolean;
   onToggleShift?: () => void;
+  onToggleCaps?: () => void;
 }
 
 const keyboardLayout = [
@@ -60,7 +61,8 @@ export default function Keyboard({
   keyboardType = 'basic',
   colorCodingEnabled = false,
   isShiftActive = false,
-  onToggleShift
+  onToggleShift,
+  onToggleCaps,
 }: KeyboardProps) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [highlightedKeys, setHighlightedKeys] = useState<Set<string>>(new Set());
@@ -89,7 +91,7 @@ export default function Keyboard({
     } else if (key === 'SHIFT') {
       onToggleShift?.();
     } else if (key === 'CAPSLOCK') {
-      onToggleShift?.();
+      onToggleCaps?.();
     } else if (key === 'TAB') {
       onKeyPress?.('\t');
     } else {

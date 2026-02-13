@@ -43,7 +43,34 @@ function App() {
   const [fileManagerMode, setFileManagerMode] = useState<'open' | 'save'>('open');
   const [currentFileId, setCurrentFileId] = useState<string | null>(null);
   const [currentFileName, setCurrentFileName] = useState<string>('');
-  const [isShiftActive, setIsShiftActive] = useState(false);
+  // Shift & Caps Lock State
+  const [isPhysicalShiftPressed, setIsPhysicalShiftPressed] = useState(false);
+  const [isCapsLockActive, setIsCapsLockActive] = useState(false);
+  const [isOneShotShiftActive, setIsOneShotShiftActive] = useState(false);
+  const [shouldAutoCap, setShouldAutoCap] = useState(false);
+
+  // Effective shift state for visuals and virtual keyboard input
+  const effectiveShift = isPhysicalShiftPressed || isCapsLockActive || isOneShotShiftActive || shouldAutoCap;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') setIsPhysicalShiftPressed(true);
+      if (e.getModifierState('CapsLock')) setIsCapsLockActive(true);
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') setIsPhysicalShiftPressed(false);
+      if (!e.getModifierState('CapsLock')) setIsCapsLockActive(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   useEffect(() => {
     const loadVoices = () => {
@@ -284,17 +311,35 @@ function App() {
     }
   };
 
+
   const handleKeyPress = (key: string) => {
     if (!editorRef.current) return;
 
     const editor = editorRef.current;
+
     if (key === 'SPACE') {
       editor.commands.insertContent(' ');
       handleAutoRead('SPACE');
+      // Space consumes one-shot shift
+      if (isOneShotShiftActive) setIsOneShotShiftActive(false);
     } else {
-      editor.commands.insertContent(key);
+      // Determine final character based on effective shift
+      // Note: key from Keyboard component is usually lowercase if we don't transform it there,
+      // but we will update Keyboard to send raw key and let us transform, OR Keyboard handles it.
+      // Currently Keyboard determines transformation. 
+      // Let's rely on OUR logic here to be safe, or just trust the input if we update Keyboard props.
+      // Let's handle case here to be robust.
+
+      const charToInsert = effectiveShift ? key.toUpperCase() : key.toLowerCase();
+      editor.commands.insertContent(charToInsert);
+
       if (key === '.' || key === '!' || key === '?') {
         handleAutoRead('PERIOD');
+        // Punctuation consumes one-shot shift
+        if (isOneShotShiftActive) setIsOneShotShiftActive(false);
+      } else {
+        // Normal characters consume one-shot shift
+        if (isOneShotShiftActive) setIsOneShotShiftActive(false);
       }
     }
   };
@@ -305,18 +350,23 @@ function App() {
       from: editorRef.current.state.selection.from - 1,
       to: editorRef.current.state.selection.from,
     });
+    // Delete might NOT consume shift, or it might? Usually it doesn't.
   };
 
   const handleReturn = () => {
     if (!editorRef.current) return;
     editorRef.current.commands.enter();
     setTimeout(() => handleAutoRead('RETURN'), 0);
+    // Return consumes one-shot shift
+    if (isOneShotShiftActive) setIsOneShotShiftActive(false);
   };
 
   const handleClear = () => {
     if (!editorRef.current) return;
     editorRef.current.commands.clearContent();
     setResponse('');
+    setShouldAutoCap(true); // Reset to auto-cap (start of doc)
+    setIsOneShotShiftActive(false);
   };
 
 
@@ -913,8 +963,7 @@ function App() {
                 textAreaFontSize={settings.textAreaFontSize}
                 textAreaTextColor={settings.textAreaTextColor}
                 textAreaBgColor={settings.textAreaBgColor}
-                isShiftActive={isShiftActive}
-                onShiftChange={setIsShiftActive}
+                onAutoCapsStateChange={setShouldAutoCap}
                 onRead={() => speakText(response)}
                 onClear={handleClear}
                 onSettingsClick={() => setIsSettingsOpen(true)}
@@ -931,23 +980,21 @@ function App() {
 
         {settings.keyboardType !== 'none' && (
           <div className="relative">
-            <div
-              className="absolute inset-0 rounded-3xl blur-3xl -z-10"
-              style={{
-                background: `linear-gradient(to bottom right, rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.1), rgba(${glassRgb.r},${glassRgb.g},${glassRgb.b},0.05))`
-              }}
-            />
-            <Keyboard
-              onKeyPress={handleKeyPress}
-              onDelete={handleDelete}
-              onReturn={handleReturn}
-              keyFont={settings.keyFont}
-              keyFontSize={settings.keyFontSize}
-              keyboardType={settings.keyboardType}
-              colorCodingEnabled={settings.colorCodingEnabled}
-              isShiftActive={isShiftActive}
-              onToggleShift={() => setIsShiftActive(!isShiftActive)}
-            />
+            <div className="relative overflow-hidden rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+              <Keyboard
+                onKeyPress={handleKeyPress}
+                onDelete={handleDelete}
+                onReturn={handleReturn}
+                keyFont={settings.keyFont}
+                keyFontSize={settings.keyFontSize}
+                keyboardType={settings.keyboardType}
+                colorCodingEnabled={settings.colorCodingEnabled}
+                isShiftActive={effectiveShift}
+                onToggleShift={() => setIsOneShotShiftActive(!isOneShotShiftActive)}
+                onToggleCaps={() => setIsCapsLockActive(!isCapsLockActive)}
+              />
+            </div>
           </div>
         )}
       </div>
