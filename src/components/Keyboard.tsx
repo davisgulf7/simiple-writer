@@ -110,6 +110,7 @@ export default function Keyboard({
 
     return (
       <button
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => handleKeyClick(key)}
         className={`
           relative w-16 h-16 rounded-xl font-bold ${keyFontSize}

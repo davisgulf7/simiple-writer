@@ -48,6 +48,7 @@ interface RichTextEditorProps {
   onAutoReadTrigger: (trigger: 'SPACE' | 'PERIOD' | 'RETURN') => void;
   autoCapsEnabled: boolean;
   onShiftChange: (isActive: boolean) => void;
+  isShiftActive: boolean; // Add this prop
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -68,16 +69,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onAutoReadTrigger,
   autoCapsEnabled,
   onShiftChange,
+  isShiftActive, // Destructure prop
 }) => {
   const [showFormatting, setShowFormatting] = useState(false);
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
   const highlightMenuRef = useRef<HTMLDivElement>(null);
-  const [isShiftActive, setIsShiftActive] = useState(autoCapsEnabled); // Initialize based on setting
-
-  // Update parent when local shift state changes
-  useEffect(() => {
-    onShiftChange(isShiftActive);
-  }, [isShiftActive, onShiftChange]);
+  // Removed local isShiftActive state and effect
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -120,6 +117,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }),
     ],
     content: content || '',
+    onFocus: () => {
+      // Check caps on focus
+      if (editor && autoCapsEnabled) checkAutoCaps(editor, true);
+    },
+    onBlur: () => {
+      // Reset shift on blur
+      onShiftChange(false);
+    },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
@@ -130,7 +135,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
     onCreate: ({ editor }) => {
       if (onEditorReady) onEditorReady(editor);
-      if (autoCapsEnabled) checkAutoCaps(editor);
+      // Do NOT check caps on create, wait for focus
     },
     editorProps: {
       attributes: {
@@ -139,6 +144,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         autocapitalize: 'sentences',
       },
       handleKeyDown: (view, e) => {
+        // Handle Auto-Read
         if (e.key === ' ' || e.code === 'Space') {
           const { from } = view.state.selection;
           const textBefore = view.state.doc.textBetween(Math.max(0, from - 1), from);
@@ -154,27 +160,43 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
   });
 
-  const checkAutoCaps = (currentEditor = editor) => {
-    if (!currentEditor || !autoCapsEnabled) return;
+  const checkAutoCaps = (currentEditor = editor, forceFocusCheck = false) => {
+    // Only run if focused, OR if we are forcing a focus check (inside onFocus)
+    if (!currentEditor || !autoCapsEnabled || (!currentEditor.isFocused && !forceFocusCheck)) return;
 
     const { selection, doc } = currentEditor.state;
     const { from } = selection;
 
+    let shouldBeShift = false;
+
     // 1. Empty document / Start -> Caps
     if (doc.textContent.length === 0 || from === 1) {
-      setIsShiftActive(true);
-      return;
+      shouldBeShift = true;
+    } else {
+      // 2. Check context
+      // Look back 5 chars for sentence terminators
+      const lookback = doc.textBetween(Math.max(0, from - 5), from, '\n');
+
+      // Regex: ends with [.!?] followed by whitespace(s), OR just newline
+      if (/[.!?]\s+$/.test(lookback) || /\n$/.test(lookback) || lookback.length === 0) {
+        shouldBeShift = true;
+      }
     }
 
-    // 2. Check context
-    // Look back 5 chars for sentence terminators
-    const lookback = doc.textBetween(Math.max(0, from - 5), from, '\n');
+    // Only update if current state matches our expectation
+    // This allows manual override (caps lock) NOT to be fought against *if* we wanted that,
+    // but the user complained about sticking shift.
+    // The key here is: we only turn shift ON if needed.
+    // If we think it should be OFF, we turn it OFF.
+    // BUT the user might have manually Shifted. 
+    // However, for "Auto-Caps", we want to enforce the rule.
+    // If the user presses Shift manually, App.tsx toggles it. 
+    // This function runs on selection update (every cursor move/type).
+    // If we just typed a character, we are not at start of sentence, so shouldBeShift = false.
+    // So this will turn it OFF after typing. Perfect.
 
-    // Regex: ends with [.!?] followed by whitespace(s), OR just newline
-    if (/[.!?]\s+$/.test(lookback) || /\n$/.test(lookback) || lookback.length === 0) {
-      setIsShiftActive(true);
-    } else {
-      setIsShiftActive(false);
+    if (isShiftActive !== shouldBeShift) {
+      onShiftChange(shouldBeShift);
     }
   };
 

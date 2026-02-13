@@ -913,6 +913,8 @@ function App() {
                 textAreaFontSize={settings.textAreaFontSize}
                 textAreaTextColor={settings.textAreaTextColor}
                 textAreaBgColor={settings.textAreaBgColor}
+                isShiftActive={isShiftActive}
+                onShiftChange={setIsShiftActive}
                 onRead={() => speakText(response)}
                 onClear={handleClear}
                 onSettingsClick={() => setIsSettingsOpen(true)}
@@ -922,7 +924,6 @@ function App() {
                 onToggleAutoRead={() => setIsAutoReadEnabled(!isAutoReadEnabled)}
                 onAutoReadTrigger={handleAutoRead}
                 autoCapsEnabled={settings.autoCapsEnabled}
-                onShiftChange={setIsShiftActive}
               />
             </div>
           </div>
