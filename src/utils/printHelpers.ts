@@ -1,27 +1,30 @@
 
-export const printDocument = (htmlContent: string) => {
-    // Create a new window for printing
-    const printWindow = window.open('', '_blank');
 
-    if (!printWindow) {
-        alert('Please allow popups to print');
-        return;
-    }
+export const printDocument = (htmlContent: string, fontFamily: string, fontSize: string) => {
+  // Create a new window for printing
+  const printWindow = window.open('', '_blank');
 
-    // Generate the full HTML structure for the print window
-    const html = `
+  if (!printWindow) {
+    alert('Please allow popups to print');
+    return;
+  }
+
+  // Generate the full HTML structure for the print window
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
         <title>Print Document</title>
         <style>
+          @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@400;700&family=Outfit:wght@400;700&family=Roboto:wght@400;700&display=swap');
+          
           @page {
             margin: 1in;
             size: auto;
           }
           body {
-            font-family: Arial, Helvetica, sans-serif; /* Default sans-serif for readability */
-            font-size: 12pt;
+            font-family: ${fontFamily}, Arial, sans-serif !important;
+            font-size: ${fontSize} !important;
             line-height: 1.5;
             color: black;
             background: white;
@@ -54,26 +57,26 @@ export const printDocument = (htmlContent: string) => {
     </html>
   `;
 
-    // Write content to the new window
-    printWindow.document.write(html);
-    printWindow.document.close(); // Finish writing
+  // Write content to the new window
+  printWindow.document.write(html);
+  printWindow.document.close(); // Finish writing
 
-    // Wait for content to load (images etc) then print
-    printWindow.onload = () => {
-        printWindow.focus();
-        printWindow.print();
-        // Optional: Close window after print (some browsers block this if print dialog is open)
-        // printWindow.close(); 
-    };
+  // Wait for content to load (images etc) then print
+  printWindow.onload = () => {
+    printWindow.focus();
+    printWindow.print();
+    // Optional: Close window after print (some browsers block this if print dialog is open)
+    // printWindow.close(); 
+  };
 
-    // Fallback for browsers where onload matches write completion
-    setTimeout(() => {
-        try {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
-        } catch (e) {
-            console.error("Print error", e);
-        }
-    }, 500);
+  // Fallback for browsers where onload matches write completion
+  setTimeout(() => {
+    try {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    } catch (e) {
+      console.error("Print error", e);
+    }
+  }, 500);
 };

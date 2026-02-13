@@ -884,7 +884,11 @@ function App() {
             <button
               onClick={() => {
                 if (editorRef.current) {
-                  printDocument(editorRef.current.getHTML());
+                  printDocument(
+                    editorRef.current.getHTML(),
+                    settings.textAreaFont,
+                    settings.textAreaFontSize
+                  );
                 }
               }}
               className="px-4 py-2 bg-black/40 hover:bg-black/60 text-white rounded-lg backdrop-blur-md border border-white/20 font-medium transition-all text-sm flex items-center gap-2 shadow-sm"
