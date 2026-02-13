@@ -3,6 +3,7 @@ import Keyboard from './components/Keyboard';
 import RichTextEditor from './components/RichTextEditor';
 import { FileText, X, Image, Trash2 } from 'lucide-react';
 import type { Editor } from '@tiptap/react';
+import ReloadPrompt from './components/ReloadPrompt';
 import {
   type UserSettings,
   saveSettings,
@@ -792,6 +793,9 @@ function App() {
         )}
 
       </div>
+
+      {/* PWA Update Notification */}
+      <ReloadPrompt />
 
       {isSettingsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
