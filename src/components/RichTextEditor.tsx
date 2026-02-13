@@ -119,41 +119,27 @@ export default function RichTextEditor({
         class: 'outline-none focus:outline-none text-left', // Added text-left
         style: `min-height: ${minHeight}`,
       },
+      handleKeyDown: (view, e) => {
+        if (e.key === ' ' || e.code === 'Space') {
+          const { from } = view.state.selection;
+          // Check if there is already a space before the cursor
+          const textBefore = view.state.doc.textBetween(Math.max(0, from - 1), from);
+          if (textBefore === ' ') {
+            return false; // Don't trigger if already a space
+          }
+          setTimeout(() => onAutoReadTrigger('SPACE'), 0);
+        } else if (e.key === '.' || e.key === '!' || e.key === '?') {
+          setTimeout(() => onAutoReadTrigger('PERIOD'), 0);
+        } else if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter') {
+          // Increase timeout slightly to ensure new paragraph creation and state update is complete
+          setTimeout(() => onAutoReadTrigger('RETURN'), 50);
+        }
+        return false; // Allow default behavior
+      },
     },
   });
 
-  // Handle physical keyboard events for Auto-Read
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!editor) return;
-
-      if (e.key === ' ' || e.code === 'Space') {
-        const { from } = editor.state.selection;
-        // Check if there is already a space before the cursor
-        const textBefore = editor.state.doc.textBetween(Math.max(0, from - 1), from);
-        if (textBefore === ' ') {
-          return; // Don't trigger if already a space (prevent double-read on 2nd space)
-        }
-        setTimeout(() => onAutoReadTrigger('SPACE'), 0);
-      } else if (e.key === '.' || e.key === '!' || e.key === '?') {
-        setTimeout(() => onAutoReadTrigger('PERIOD'), 0);
-      } else if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter') {
-        // Increase timeout slightly to ensure new paragraph creation and state update is complete
-        setTimeout(() => onAutoReadTrigger('RETURN'), 50);
-      }
-    };
-
-    const editorElement = document.querySelector('.ProseMirror');
-    if (editorElement) {
-      editorElement.addEventListener('keydown', handleKeyDown as any);
-    }
-
-    return () => {
-      if (editorElement) {
-        editorElement.removeEventListener('keydown', handleKeyDown as any);
-      }
-    };
-  }, [onAutoReadTrigger, editor]);
+  /* Removed manual useEffect listener */
 
   useEffect(() => {
     if (editor && onEditorReady) {
