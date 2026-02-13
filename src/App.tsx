@@ -1014,11 +1014,11 @@ function App() {
         </div>
       </div>
 
-      <div className="mb-8 relative">
-        <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-2xl border border-white/20 shadow-2xl">
+      <div className="mb-8 relative w-full">
+        <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-2xl border border-white/20 shadow-2xl w-full">
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
-          <div className="relative p-6">
+          <div className="relative p-6 w-full">
             <RichTextEditor
               content={response}
               onChange={setResponse}

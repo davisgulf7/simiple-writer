@@ -455,7 +455,7 @@ export default function RichTextEditor({
             fontFamily: textAreaFont,
           }}
         >
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="w-full" />
         </div>
       </div>
     </div>
