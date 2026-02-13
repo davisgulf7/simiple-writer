@@ -45,7 +45,7 @@ interface RichTextEditorProps {
   maxHeight?: string;
   isAutoReadEnabled: boolean;
   onToggleAutoRead: () => void;
-  onAutoReadTrigger: (trigger: 'SPACE' | 'PERIOD') => void;
+  onAutoReadTrigger: (trigger: 'SPACE' | 'PERIOD' | 'RETURN') => void;
 }
 
 export default function RichTextEditor({
@@ -137,6 +137,8 @@ export default function RichTextEditor({
         setTimeout(() => onAutoReadTrigger('SPACE'), 0);
       } else if (e.key === '.' || e.key === '!' || e.key === '?') {
         setTimeout(() => onAutoReadTrigger('PERIOD'), 0);
+      } else if (e.key === 'Enter') {
+        setTimeout(() => onAutoReadTrigger('RETURN'), 0);
       }
     };
 

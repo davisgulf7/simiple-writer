@@ -97,13 +97,13 @@ function App() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const handleAutoRead = (trigger: 'SPACE' | 'PERIOD') => {
+  const handleAutoRead = (trigger: 'SPACE' | 'PERIOD' | 'RETURN') => {
     if (!isAutoReadEnabled || !editorRef.current) return;
 
     const editor = editorRef.current;
     const { from } = editor.state.selection;
-    // Get all text up to the cursor
-    const textBefore = editor.state.doc.textBetween(0, from, ' ');
+    // Get all text up to the cursor, using newline as separator to detect paragraphs
+    const textBefore = editor.state.doc.textBetween(0, from, '\n');
 
     if (trigger === 'SPACE') {
       // 1. Avoid re-reading on multiple spaces
@@ -118,34 +118,42 @@ function App() {
       if (lastWord && !/[.!?]$/.test(lastWord)) {
         speakText(lastWord, true);
       }
-    } else if (trigger === 'PERIOD') {
+    } else if (trigger === 'PERIOD' || trigger === 'RETURN') {
       const trimmed = textBefore.trim();
-      const punctuation = trimmed.slice(-1); // . ! ?
+      let lastWord = '';
+      let punctuation = '';
 
-      // 1. Speak the last word (interrupting previous)
-      // We look back to find the start of the last word
-      // trimmed is "Word." -> length 5. punctuation is ".".
-      // textWithoutLastChar is "Word".
-      const textWithoutLastChar = trimmed.slice(0, -1);
+      if (trigger === 'PERIOD') {
+        punctuation = trimmed.slice(-1); // . ! ?
+        const textWithoutLastChar = trimmed.slice(0, -1);
+        const cleanTextForMatch = cleanForSpeech(textWithoutLastChar);
+        const wordMatch = cleanTextForMatch.match(/(\S+)$/);
+        lastWord = wordMatch ? wordMatch[0] : '';
+      } else {
+        // RETURN
+        // Just find the last word
+        const cleanTextForMatch = cleanForSpeech(trimmed);
+        const wordMatch = cleanTextForMatch.match(/(\S+)$/);
+        lastWord = wordMatch ? wordMatch[0] : '';
+      }
 
-      const cleanTextForMatch = cleanForSpeech(textWithoutLastChar);
-      const wordMatch = cleanTextForMatch.match(/(\S+)$/); // Find last sequence of non-whitespace
-      const lastWord = wordMatch ? wordMatch[0] : '';
-
+      // 1. Speak the last word (if it exists)
+      // interrupt: true because we want to say this word immediately
       if (lastWord) {
         speakText(lastWord, true);
       }
 
-      // 2. Speak the sentence (queueing after the word)
-      // Find the start of the current sentence by looking backwards for . ! ?
-      // We ignore the very last character (which is the trigger punctuation)
+      // 2. Speak the sentence/line (queueing after the word)
+      // Find the start of the current sentence by looking backwards for . ! ? OR \n
       let sentenceStart = 0;
-      const searchLimit = Math.max(0, textBefore.length - 1000); // Optimization: max lookback chars
+      const searchLimit = Math.max(0, textBefore.length - 1000);
 
-      // Iterate backwards from the character BEFORE the punctuation we just typed
-      for (let i = textBefore.length - 2; i >= searchLimit; i--) {
+      // Iterate backwards; if trigger is PERIOD, skip the last char. If RETURN, start from end.
+      const startSearchIndex = trigger === 'PERIOD' ? textBefore.length - 2 : textBefore.length - 1;
+
+      for (let i = startSearchIndex; i >= searchLimit; i--) {
         const char = textBefore[i];
-        if (char === '.' || char === '!' || char === '?') {
+        if (char === '.' || char === '!' || char === '?' || char === '\n') {
           sentenceStart = i + 1;
           break;
         }
@@ -154,10 +162,13 @@ function App() {
       const lastSentence = textBefore.slice(sentenceStart).trim();
 
       if (lastSentence) {
-        if (lastSentence.endsWith(punctuation)) {
-          speakText(lastSentence, false);
-        } else {
+        // Condition: if it ends with the punctuation we triggered with, don't double it.
+        // For RETURN, we don't usually add punctuation unless we want to pause... 
+        // but speakText ensures it's spoken.
+        if (punctuation && !lastSentence.endsWith(punctuation)) {
           speakText(lastSentence + punctuation, false);
+        } else {
+          speakText(lastSentence, false);
         }
       }
     }
@@ -189,6 +200,7 @@ function App() {
   const handleReturn = () => {
     if (!editorRef.current) return;
     editorRef.current.commands.enter();
+    setTimeout(() => handleAutoRead('RETURN'), 0);
   };
 
   const handleClear = () => {
