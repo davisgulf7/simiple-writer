@@ -75,7 +75,11 @@ function App() {
     if (interrupt) {
       window.speechSynthesis.cancel();
     }
-    const utterance = new SpeechSynthesisUtterance(cleanedText);
+
+    // Append a space to ensure the TTS engine treats it as a complete word/sentence
+    // This fixes issues where single words without trailing context are read as letters
+    const utterance = new SpeechSynthesisUtterance(cleanedText + ' ');
+
     utterance.rate = settings.readingSpeed;
     utterance.pitch = 1;
     utterance.volume = 1;
