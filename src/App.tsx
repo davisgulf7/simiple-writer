@@ -59,13 +59,20 @@ function App() {
     editorRef.current = editor;
   };
 
+  const cleanForSpeech = (text: string): string => {
+    // Remove Zero Width Space, Byte Order Mark, and other non-printable characters
+    // Keep basic punctuation, letters, numbers, and whitespace
+    return text.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  };
+
   const speakText = (text: string, interrupt = true) => {
-    if (!text.trim()) return;
+    const cleanedText = cleanForSpeech(text);
+    if (!cleanedText) return;
 
     if (interrupt) {
       window.speechSynthesis.cancel();
     }
-    const utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(cleanedText);
     utterance.rate = settings.readingSpeed;
     utterance.pitch = 1;
     utterance.volume = 1;
@@ -73,6 +80,11 @@ function App() {
     const selectedVoiceObj = voices.find(v => v.name === settings.selectedVoice);
     if (selectedVoiceObj) {
       utterance.voice = selectedVoiceObj;
+    }
+
+    // Explicitly set language if voice has one, to avoid browser guessing wrong
+    if (selectedVoiceObj?.lang) {
+      utterance.lang = selectedVoiceObj.lang;
     }
 
     window.speechSynthesis.speak(utterance);
@@ -108,7 +120,9 @@ function App() {
       // trimmed is "Word." -> length 5. punctuation is ".".
       // textWithoutLastChar is "Word".
       const textWithoutLastChar = trimmed.slice(0, -1);
-      const wordMatch = textWithoutLastChar.match(/(\S+)$/); // Find last sequence of non-whitespace
+
+      const cleanTextForMatch = cleanForSpeech(textWithoutLastChar);
+      const wordMatch = cleanTextForMatch.match(/(\S+)$/); // Find last sequence of non-whitespace
       const lastWord = wordMatch ? wordMatch[0] : '';
 
       if (lastWord) {
